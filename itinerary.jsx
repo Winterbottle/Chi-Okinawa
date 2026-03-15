@@ -5,6 +5,12 @@ const gmap = (placeId, fallbackName) =>
     ? `https://www.google.com/maps/place/?q=place_id:${placeId}`
     : `https://www.google.com/maps/search/${encodeURIComponent(fallbackName)}`;
 
+const amap = (name) =>
+  `https://uri.amap.com/search?keyword=${encodeURIComponent(name)}`;
+
+const didi = (name) =>
+  `diditaxi://open?destAddress=${encodeURIComponent(name)}`;
+
 // Search queries per place key — used when user taps 📸
 const PHOTO_QUERIES = {
   pudong:         "Pudong International Airport Shanghai terminal interior",
@@ -841,13 +847,23 @@ export default function Itinerary() {
                       {event.transport && (
                         <div style={{ fontSize: 12, color: "#2563eb", background: "#eff6ff", padding: "4px 8px", borderRadius: 6 }}>{event.transport}</div>
                       )}
-                      {event.mapUrl && (
+                      {event.mapUrl && (<>
                         <a href={event.mapUrl} target="_blank" rel="noopener noreferrer" style={{
                           display: "inline-flex", alignItems: "center", gap: 4,
                           fontSize: 12, color: "#16a34a", background: "#f0fdf4",
                           padding: "4px 8px", borderRadius: 6, textDecoration: "none", border: "1px solid #bbf7d0",
-                        }}>📍 Maps</a>
-                      )}
+                        }}>📍 GMaps</a>
+                        <a href={amap(event.title)} target="_blank" rel="noopener noreferrer" style={{
+                          display: "inline-flex", alignItems: "center", gap: 4,
+                          fontSize: 12, color: "#0070f3", background: "#eff6ff",
+                          padding: "4px 8px", borderRadius: 6, textDecoration: "none", border: "1px solid #bfdbfe",
+                        }}>🗺 Amap</a>
+                        <a href={didi(event.title)} target="_blank" rel="noopener noreferrer" style={{
+                          display: "inline-flex", alignItems: "center", gap: 4,
+                          fontSize: 12, color: "#d97706", background: "#fffbeb",
+                          padding: "4px 8px", borderRadius: 6, textDecoration: "none", border: "1px solid #fde68a",
+                        }}>🚕 Didi</a>
+                      </>)}
                       {event.photoKey && !event.suggested && (
                         <button onClick={() => openGallery(event)} style={{
                           fontSize: 12, color: "#7c3aed", background: "#f5f3ff",
