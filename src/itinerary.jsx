@@ -5,11 +5,25 @@ const gmap = (placeId, fallbackName) =>
     ? `https://www.google.com/maps/place/?q=place_id:${placeId}`
     : `https://www.google.com/maps/search/${encodeURIComponent(fallbackName)}`;
 
-const amap = (name) =>
-  `https://uri.amap.com/search?keyword=${encodeURIComponent(name)}`;
+const openAmap = (name) => {
+  const encoded = encodeURIComponent(name);
+  const ua = navigator.userAgent.toLowerCase();
+  if (/iphone|ipad|ipod/.test(ua)) {
+    window.location.href = `iosamap://poi?sourceApplication=app&keywords=${encoded}&dev=0`;
+  } else if (/android/.test(ua)) {
+    window.location.href = `androidamap://poi?sourceApplication=app&keywords=${encoded}&dev=0`;
+  } else {
+    window.open(`https://www.amap.com/search?query=${encoded}`, "_blank");
+    return;
+  }
+  setTimeout(() => window.open(`https://uri.amap.com/search?keyword=${encoded}`, "_blank"), 1500);
+};
 
-const didi = (name) =>
-  `diditaxi://open?destAddress=${encodeURIComponent(name)}`;
+const openDidi = (name) => {
+  const encoded = encodeURIComponent(name);
+  window.location.href = `diditaxi://open?destAddress=${encoded}`;
+  setTimeout(() => window.open(`https://www.didiglobal.com/`, "_blank"), 1500);
+};
 
 // Search queries per place key — used when user taps 📸
 const PHOTO_QUERIES = {
@@ -525,16 +539,18 @@ export default function Itinerary() {
                         <div style={{ fontSize: 12, color: "#2563eb", background: "#eff6ff", padding: "4px 8px", borderRadius: 6 }}>{event.transport}</div>
                       )}
                       {event.mapUrl && (<>
-                        <a href={amap(event.title)} target="_blank" rel="noopener noreferrer" style={{
+                        <button onClick={() => openAmap(event.title)} style={{
                           display: "inline-flex", alignItems: "center", gap: 4,
                           fontSize: 12, color: "#16a34a", background: "#f0fdf4",
-                          padding: "4px 8px", borderRadius: 6, textDecoration: "none", border: "1px solid #bbf7d0",
-                        }}>📍 Maps</a>
-                        <a href={didi(event.title)} target="_blank" rel="noopener noreferrer" style={{
+                          padding: "4px 8px", borderRadius: 6, border: "1px solid #bbf7d0",
+                          cursor: "pointer", fontFamily: "inherit",
+                        }}>📍 Maps</button>
+                        <button onClick={() => openDidi(event.title)} style={{
                           display: "inline-flex", alignItems: "center", gap: 4,
                           fontSize: 12, color: "#d97706", background: "#fffbeb",
-                          padding: "4px 8px", borderRadius: 6, textDecoration: "none", border: "1px solid #fde68a",
-                        }}>🚕 Didi</a>
+                          padding: "4px 8px", borderRadius: 6, border: "1px solid #fde68a",
+                          cursor: "pointer", fontFamily: "inherit",
+                        }}>🚕 Didi</button>
                       </>)}
                       {event.photoKey && !event.suggested && (
                         <a href={`https://www.google.com/search?q=${encodeURIComponent(PHOTO_QUERIES[event.photoKey] || event.title)}&tbm=isch`} target="_blank" rel="noopener noreferrer" style={{

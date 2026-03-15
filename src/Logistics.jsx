@@ -83,7 +83,7 @@ const HOTELS = [
   },
   {
     name: "浩廷·高空江景酒店",
-    chinese: "Haoting Sky River View Hotel",
+    chinese: null,
     location: "29F, Tower B, Caihui Plaza, No.5 Bayi Rd, Yuzhong District, Chongqing",
     dates: "May 14–18 · 4 nights",
     emoji: "🌆",
@@ -92,21 +92,11 @@ const HOTELS = [
     border: "#c4b5fd",
     link: null,
   },
-  {
-    name: "Chengdu Hotel",
-    chinese: null,
-    location: "Chengdu",
-    dates: "—",
-    emoji: "🏩",
-    color: "#15803d",
-    light: "#f0fdf4",
-    border: "#86efac",
-    link: "https://www.trip.com/w/pQ5xV2iGTT2",
-  },
 ];
 
 const CAR = {
   company: "Asoviva Works",
+  link: "https://rental.asoviva-works.com/english/",
   vehicle: "ASOVIVAN Type 4 (ハイエース) — Camper Blue",
   pickup: "May 7, 2026 · 09:00",
   dropoff: "May 12, 2026 · 13:30",
@@ -236,7 +226,14 @@ export default function Logistics() {
             <span style={{ fontSize: 12, opacity: 0.85 }}>{CAR.price}</span>
           </div>
           <div style={{ padding: "14px 16px", display: "flex", flexDirection: "column", gap: 8 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, color: "#1f2937" }}>{CAR.vehicle}</div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: "#1f2937" }}>{CAR.vehicle}</div>
+              <a href={CAR.link} target="_blank" rel="noopener noreferrer" style={{
+                fontSize: 12, color: "#d97706", background: "white",
+                border: "1px solid #fde68a", padding: "4px 12px",
+                borderRadius: 6, textDecoration: "none", fontWeight: 600,
+              }}>🔗 Asoviva Works</a>
+            </div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
               {[
                 `📅 Pick-up: ${CAR.pickup}`,

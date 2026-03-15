@@ -1,122 +1,97 @@
 import { useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 const gmaps = (name) =>
   `https://www.google.com/maps/search/${encodeURIComponent(name + " Okinawa Japan")}`;
 
 const BOOKMARKS = [
   {
-    id: "cafe",
-    title: "Café & Drinks",
-    emoji: "☕",
-    color: "#92400e",
-    light: "#fef8ed",
-    border: "#f5d5a0",
+    id: "cafe", title: "Café & Drinks", emoji: "☕",
+    color: "#92400e", light: "#fef8ed", border: "#f5d5a0",
     places: [
-      "Zhyvago Coffee Roastery",
-      "PST Okinawa by the Sea",
-      "BURUNO",
-      "Bookcafe Okinawa Rail",
+      { name: "Zhyvago Coffee Roastery",    coord: [26.301, 127.746] },
+      { name: "PST Okinawa by the Sea",     coord: [26.521, 127.898] },
+      { name: "BURUNO",                     coord: [26.527, 127.984] },
+      { name: "Bookcafe Okinawa Rail",      coord: [26.244, 127.713] },
     ],
   },
   {
-    id: "food",
-    title: "Food & Restaurants",
-    emoji: "🍜",
-    color: "#b91c1c",
-    light: "#fff5f5",
-    border: "#fca5a5",
+    id: "food", title: "Food & Restaurants", emoji: "🍜",
+    color: "#b91c1c", light: "#fff5f5", border: "#fca5a5",
     places: [
-      "Takaesu Soba",
-      "Miyazato Soba",
-      "Pizzeria da Enzo",
-      "Hamanoya Restaurant",
-      "Nagumagai Restaurant",
-      "Restaurant Flipper",
-      "Umi-to-Mugi-to",
-      "Sunrise Higashi",
-      "Itoman Fishing Cooperative Fish Center",
+      { name: "Takaesu Soba",                              coord: [26.341, 127.764] },
+      { name: "Miyazato Soba",                             coord: [26.155, 127.669] },
+      { name: "Pizzeria da Enzo",                          coord: [26.449, 127.804] },
+      { name: "Hamanoya Restaurant",                       coord: [26.421, 127.822] },
+      { name: "Nagumagai Restaurant",                      coord: [26.680, 128.270] },
+      { name: "Restaurant Flipper",                        coord: [26.652, 128.100] },
+      { name: "Umi-to-Mugi-to",                            coord: [26.668, 127.875] },
+      { name: "Sunrise Higashi",                           coord: [26.697, 128.271] },
+      { name: "Itoman Fishing Cooperative Fish Center",    coord: [26.117, 127.665] },
     ],
   },
   {
-    id: "shopping",
-    title: "Shopping",
-    emoji: "🛍️",
-    color: "#7c3aed",
-    light: "#faf5ff",
-    border: "#c4b5fd",
+    id: "shopping", title: "Shopping", emoji: "🛍️",
+    color: "#7c3aed", light: "#faf5ff", border: "#c4b5fd",
     places: [
-      "AEON MALL Okinawa Rycom",
-      "Pokemon Center Okinawa",
-      "Modeler's Core",
-      "Rider's Shop Stec5",
-      "2nd LIFE",
-      "Tsukumo",
-      "Surugaya Naha Okiei-dori",
-      "Nuchima-su Salt Factory",
+      { name: "AEON MALL Okinawa Rycom",      coord: [26.308, 127.797] },
+      { name: "Pokemon Center Okinawa",       coord: [26.308, 127.797] },
+      { name: "Modeler's Core",               coord: [26.380, 127.803] },
+      { name: "Rider's Shop Stec5",           coord: [26.322, 127.793] },
+      { name: "2nd LIFE",                     coord: [26.247, 127.717] },
+      { name: "Tsukumo",                      coord: [26.219, 127.688] },
+      { name: "Surugaya Naha Okiei-dori",     coord: [26.216, 127.689] },
+      { name: "Nuchima-su Salt Factory",      coord: [26.373, 128.055] },
     ],
   },
   {
-    id: "culture",
-    title: "History & Culture",
-    emoji: "🏯",
-    color: "#b45309",
-    light: "#fffbeb",
-    border: "#fcd34d",
+    id: "culture", title: "History & Culture", emoji: "🏯",
+    color: "#b45309", light: "#fffbeb", border: "#fcd34d",
     places: [
-      "Katsuren Castle Ruins",
-      "Peace Memorial Park",
-      "Okinawa World",
-      "Yanbaru Kuina Ecological Exhibition Center",
-      "Higashi-son Fureai Hirugi Park",
+      { name: "Katsuren Castle Ruins",                      coord: [26.330, 127.973] },
+      { name: "Peace Memorial Park",                        coord: [26.097, 127.715] },
+      { name: "Okinawa World",                              coord: [26.171, 127.742] },
+      { name: "Yanbaru Kuina Ecological Exhibition Center", coord: [26.712, 128.254] },
+      { name: "Higashi-son Fureai Hirugi Park",             coord: [26.699, 128.170] },
     ],
   },
   {
-    id: "nature",
-    title: "Nature & Scenery",
-    emoji: "🌊",
-    color: "#0369a1",
-    light: "#f0f9ff",
-    border: "#7dd3fc",
+    id: "nature", title: "Nature & Scenery", emoji: "🌊",
+    color: "#0369a1", light: "#f0f9ff", border: "#7dd3fc",
     places: [
-      "Cape Hedo",
-      "Cape Maeda",
-      "Cape Chinen Park",
-      "Kayauchi Banta",
-      "Bise-Fukugi Tree Road",
-      "Kanucha Beach",
+      { name: "Cape Hedo",             coord: [26.867, 128.261] },
+      { name: "Cape Maeda",            coord: [26.444, 127.763] },
+      { name: "Cape Chinen Park",      coord: [26.153, 127.795] },
+      { name: "Kayauchi Banta",        coord: [26.638, 127.870] },
+      { name: "Bise-Fukugi Tree Road", coord: [26.693, 127.887] },
+      { name: "Kanucha Beach",         coord: [26.709, 128.179] },
     ],
   },
   {
-    id: "attractions",
-    title: "Attractions & Theme Parks",
-    emoji: "🎡",
-    color: "#15803d",
-    light: "#f0fdf4",
-    border: "#86efac",
+    id: "attractions", title: "Attractions & Theme Parks", emoji: "🎡",
+    color: "#15803d", light: "#f0fdf4", border: "#86efac",
     places: [
-      "Okinawa Churaumi Aquarium",
-      "DMM Kariyushi Aquarium Okinawa",
-      "Junglia Okinawa",
-      "Nago Pineapple Park",
-      "Orion Happy Park",
-      "Ryujin Hot Springs",
-      "PARCO CITY Observation Deck",
-      "ricoland Okinawa",
+      { name: "Okinawa Churaumi Aquarium",    coord: [26.694, 127.878] },
+      { name: "DMM Kariyushi Aquarium Okinawa", coord: [26.231, 127.693] },
+      { name: "Junglia Okinawa",              coord: [26.618, 128.108] },
+      { name: "Nago Pineapple Park",          coord: [26.590, 127.961] },
+      { name: "Orion Happy Park",             coord: [26.589, 127.983] },
+      { name: "Ryujin Hot Springs",           coord: [26.228, 127.700] },
+      { name: "PARCO CITY Observation Deck",  coord: [26.289, 127.737] },
+      { name: "ricoland Okinawa",             coord: [26.247, 127.736] },
     ],
   },
   {
-    id: "roadside",
-    title: "Roadside Stations & Markets",
-    emoji: "🛣️",
-    color: "#ea580c",
-    light: "#fff7ed",
-    border: "#fdba74",
+    id: "roadside", title: "Roadside Stations & Markets", emoji: "🛣️",
+    color: "#ea580c", light: "#fff7ed", border: "#fdba74",
     places: [
-      "Yuiyui Kunigami (Michi no Eki)",
-      "Ogimi Roadside Station / Yambaru-no-mori",
-      "Road Station Yanbaru Pineapple Hill Aha",
-      "Roadside Station Kyoda",
-      "Ginoza Roadside Station",
+      { name: "Yuiyui Kunigami (Michi no Eki)",              coord: [26.786, 128.289] },
+      { name: "Ogimi Roadside Station / Yambaru-no-mori",    coord: [26.698, 128.151] },
+      { name: "Road Station Yanbaru Pineapple Hill Aha",     coord: [26.705, 128.166] },
+      { name: "Roadside Station Kyoda",                      coord: [26.578, 127.979] },
+      { name: "Ginoza Roadside Station",                     coord: [26.481, 128.048] },
     ],
   },
 ];
@@ -130,9 +105,23 @@ const DAYS = [
   { id: "may12", label: "May 12 (Tue)", type: "depart",  note: "Return campervan to Asoviva Works by 13:30 → Naha Airport → depart 15:00 Spring Airlines 9C6978 → Shanghai 16:35." },
 ];
 
+const makeIcon = (emoji, color) =>
+  L.divIcon({
+    html: `<div style="background:${color};width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.35);">${emoji}</div>`,
+    className: "",
+    iconSize: [34, 34],
+    iconAnchor: [17, 17],
+    popupAnchor: [0, -18],
+  });
+
 export default function Okinawa() {
   const [activeDay, setActiveDay] = useState("may7");
+  const [activeFilter, setActiveFilter] = useState(null);
   const day = DAYS.find(d => d.id === activeDay);
+
+  const visibleCats = activeFilter
+    ? BOOKMARKS.filter(c => c.id === activeFilter)
+    : BOOKMARKS;
 
   return (
     <div style={{ fontFamily: "'Georgia', serif", background: "#fafaf8", minHeight: "100vh" }}>
@@ -145,20 +134,13 @@ export default function Okinawa() {
         <div style={{ fontSize: 12, letterSpacing: 4, textTransform: "uppercase", opacity: 0.65, marginBottom: 6 }}>
           Travel Itinerary
         </div>
-        <h1 style={{ fontSize: 26, fontWeight: "bold", margin: "0 0 4px", fontFamily: "'Georgia', serif" }}>
+        <h1 style={{ fontSize: 26, fontWeight: "bold", margin: "0 0 4px" }}>
           Singapore → Okinawa 🌺
         </h1>
         <div style={{ fontSize: 13, opacity: 0.75, marginBottom: 16 }}>May 7–12, 2026 · Campervan Adventure</div>
         <div style={{ display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap" }}>
-          {[
-            "✈️ Arrive ~08:00 May 7",
-            "🚐 ASOVIVAN Type 4 Camper",
-            "✈️ Depart 15:00 May 12",
-          ].map((t, i) => (
-            <span key={i} style={{
-              background: "rgba(255,255,255,0.15)", padding: "5px 13px",
-              borderRadius: 20, fontSize: 12,
-            }}>{t}</span>
+          {["✈️ Arrive ~08:00 May 7", "🚐 ASOVIVAN Type 4 Camper", "✈️ Depart 15:00 May 12"].map((t, i) => (
+            <span key={i} style={{ background: "rgba(255,255,255,0.15)", padding: "5px 13px", borderRadius: 20, fontSize: 12 }}>{t}</span>
           ))}
         </div>
       </div>
@@ -174,38 +156,31 @@ export default function Okinawa() {
               fontWeight: activeDay === d.id ? 700 : 400,
               cursor: "pointer", fontSize: 12, fontFamily: "inherit", whiteSpace: "nowrap",
             }}>
-              {d.type === "arrive" ? "✈️ " : d.type === "depart" ? "🛫 " : ""}
-              {d.label}
+              {d.type === "arrive" ? "✈️ " : d.type === "depart" ? "🛫 " : ""}{d.label}
             </button>
           ))}
         </div>
       </div>
 
       {/* Day content */}
-      <div style={{ maxWidth: 680, margin: "0 auto", padding: "28px 16px 8px" }}>
+      <div style={{ maxWidth: 680, margin: "0 auto", padding: "24px 16px 8px" }}>
         {day.type === "free" ? (
           <div style={{
             background: "white", border: "2px dashed #d1d5db", borderRadius: 16,
-            padding: "36px 24px", textAlign: "center", color: "#9ca3af",
+            padding: "32px 24px", textAlign: "center", color: "#9ca3af",
           }}>
-            <div style={{ fontSize: 36, marginBottom: 10 }}>🌺</div>
-            <div style={{ fontSize: 15, fontWeight: 600, color: "#6b7280", marginBottom: 6 }}>
-              Itinerary Coming Soon
-            </div>
-            <div style={{ fontSize: 13 }}>
-              Check the bookmarks below for places to explore!
-            </div>
+            <div style={{ fontSize: 32, marginBottom: 8 }}>🌺</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>Itinerary Coming Soon</div>
+            <div style={{ fontSize: 12 }}>Check the bookmarks below for places to explore!</div>
           </div>
         ) : (
           <div style={{
             background: day.type === "arrive" ? "#f0f9ff" : "#fff7ed",
             border: `2px solid ${day.type === "arrive" ? "#7dd3fc" : "#fdba74"}`,
-            borderRadius: 16, padding: "20px 24px",
+            borderRadius: 16, padding: "18px 20px",
           }}>
-            <div style={{ fontSize: 28, marginBottom: 8 }}>
-              {day.type === "arrive" ? "🛬" : "🛫"}
-            </div>
-            <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6, color: day.type === "arrive" ? "#0369a1" : "#c2410c" }}>
+            <div style={{ fontSize: 24, marginBottom: 6 }}>{day.type === "arrive" ? "🛬" : "🛫"}</div>
+            <div style={{ fontWeight: 700, fontSize: 14, color: day.type === "arrive" ? "#0369a1" : "#c2410c", marginBottom: 4 }}>
               {day.type === "arrive" ? "Arrival Day" : "Departure Day"}
             </div>
             <div style={{ fontSize: 13, color: "#374151", lineHeight: 1.6 }}>{day.note}</div>
@@ -213,22 +188,80 @@ export default function Okinawa() {
         )}
       </div>
 
-      {/* Bookmarks */}
-      <div style={{ maxWidth: 680, margin: "0 auto", padding: "24px 16px 48px" }}>
-        <div style={{
-          textAlign: "center", fontWeight: 700, fontSize: 18,
-          marginBottom: 20, color: "#111827",
-        }}>
+      {/* ── MAP ── */}
+      <div style={{ maxWidth: 680, margin: "0 auto", padding: "20px 16px 0" }}>
+        <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 10, color: "#111827", textAlign: "center" }}>
           🗺️ Okinawa Bookmarks
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+
+        {/* Category filter pills */}
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "center", marginBottom: 12 }}>
+          <button onClick={() => setActiveFilter(null)} style={{
+            padding: "5px 12px", borderRadius: 20, border: "none",
+            background: !activeFilter ? "#111827" : "#e5e7eb",
+            color: !activeFilter ? "white" : "#374151",
+            fontSize: 12, cursor: "pointer", fontFamily: "inherit", fontWeight: !activeFilter ? 700 : 400,
+          }}>All</button>
           {BOOKMARKS.map(cat => (
+            <button key={cat.id} onClick={() => setActiveFilter(activeFilter === cat.id ? null : cat.id)} style={{
+              padding: "5px 12px", borderRadius: 20, border: "none",
+              background: activeFilter === cat.id ? cat.color : cat.light,
+              color: activeFilter === cat.id ? "white" : cat.color,
+              fontSize: 12, cursor: "pointer", fontFamily: "inherit",
+              fontWeight: activeFilter === cat.id ? 700 : 400,
+              border: `1px solid ${cat.border}`,
+            }}>{cat.emoji} {cat.title}</button>
+          ))}
+        </div>
+
+        {/* Leaflet Map */}
+        <div style={{ borderRadius: 16, overflow: "hidden", border: "1.5px solid #d1d5db", height: 420 }}>
+          <MapContainer
+            center={[26.5, 127.95]}
+            zoom={10}
+            style={{ height: "100%", width: "100%" }}
+            scrollWheelZoom={true}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {visibleCats.map(cat =>
+              cat.places.map((place, i) => (
+                <Marker
+                  key={`${cat.id}-${i}`}
+                  position={place.coord}
+                  icon={makeIcon(cat.emoji, cat.color)}
+                >
+                  <Popup>
+                    <div style={{ minWidth: 140 }}>
+                      <div style={{
+                        background: cat.color, color: "white",
+                        margin: "-7px -7px 8px", padding: "6px 10px",
+                        borderRadius: "4px 4px 0 0", fontSize: 12, fontWeight: 700,
+                      }}>{cat.emoji} {cat.title}</div>
+                      <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 6 }}>{place.name}</div>
+                      <a href={gmaps(place.name)} target="_blank" rel="noopener noreferrer"
+                        style={{ fontSize: 11, color: "#16a34a", textDecoration: "none" }}>
+                        📍 Open in Google Maps
+                      </a>
+                    </div>
+                  </Popup>
+                </Marker>
+              ))
+            )}
+          </MapContainer>
+        </div>
+      </div>
+
+      {/* Bookmarks list */}
+      <div style={{ maxWidth: 680, margin: "0 auto", padding: "16px 16px 48px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {visibleCats.map(cat => (
             <div key={cat.id} style={{
-              background: cat.light,
-              border: `1.5px solid ${cat.border}`,
+              background: cat.light, border: `1.5px solid ${cat.border}`,
               borderRadius: 14, overflow: "hidden",
             }}>
-              {/* Category header */}
               <div style={{
                 background: cat.color, color: "white",
                 padding: "10px 16px", display: "flex", alignItems: "center", gap: 8,
@@ -240,7 +273,6 @@ export default function Okinawa() {
                   {cat.places.length} places
                 </span>
               </div>
-              {/* Places list */}
               <div style={{ padding: "10px 10px", display: "flex", flexDirection: "column", gap: 5 }}>
                 {cat.places.map((place, i) => (
                   <div key={i} style={{
@@ -250,14 +282,13 @@ export default function Okinawa() {
                   }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <span style={{
-                        color: "white", background: cat.color,
-                        fontWeight: 700, fontSize: 11,
+                        color: "white", background: cat.color, fontWeight: 700, fontSize: 11,
                         minWidth: 20, height: 20, borderRadius: 10,
                         display: "flex", alignItems: "center", justifyContent: "center",
                       }}>{i + 1}</span>
-                      <span style={{ fontSize: 13 }}>{place}</span>
+                      <span style={{ fontSize: 13 }}>{place.name}</span>
                     </div>
-                    <a href={gmaps(place)} target="_blank" rel="noopener noreferrer" style={{
+                    <a href={gmaps(place.name)} target="_blank" rel="noopener noreferrer" style={{
                       display: "inline-flex", alignItems: "center", gap: 3,
                       fontSize: 11, color: "#16a34a", background: "#f0fdf4",
                       padding: "3px 8px", borderRadius: 6, textDecoration: "none",
