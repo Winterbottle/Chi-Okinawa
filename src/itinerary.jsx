@@ -1,9 +1,15 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 
 const gmap = (placeId, fallbackName) =>
   placeId
     ? `https://www.google.com/maps/place/?q=place_id:${placeId}`
     : `https://www.google.com/maps/search/${encodeURIComponent(fallbackName)}`;
+
+const amap = (name) =>
+  `https://uri.amap.com/search?keyword=${encodeURIComponent(name)}`;
+
+const didi = (name) =>
+  `diditaxi://open?destAddress=${encodeURIComponent(name)}`;
 
 // Search queries per place key — used when user taps 📸
 const PHOTO_QUERIES = {
@@ -22,38 +28,12 @@ const PHOTO_QUERIES = {
   geocentric:     "A Gathering Place Geocentric Exploration 地心说 Chongqing",
   starry_st:      "Starry Street 星光街 Guanyinqiao Chongqing Pokemon",
   longhu_pokemon: "Longhu Times Starry Sky 龙湖时代天街 Chongqing Pokemon",
-  panda:          "Chengdu Research Base giant panda breeding",
-  jinli:          "Jinli Ancient Street 锦里 Chengdu food night market",
-  kuanzhai:       "Kuanzhai Alley 宽窄巷子 Chengdu wide narrow lane",
   cruise:         "Yangtze River night cruise Chongqing Chaotianmen",
   ckg_airport:    "Chongqing Jiangbei International Airport terminal",
   hotel_cq:       "Chongqing riverside hotel Jiefangbei Hongyadong view",
   liyan:          "Li Yan Ba Guo 礼宴巴国 Chongqing court feast banquet",
 };
 
-// Fetch real photos via Claude API with web_search
-async function fetchPlacePhotos(query) {
-  const prompt = `Search for "${query}" and return exactly 3 direct image URLs (ending in .jpg or .png) showing this place. 
-Return ONLY a JSON array of 3 URLs, nothing else. Example: ["https://...", "https://...", "https://..."]
-Use only publicly accessible image URLs from travel sites, Wikipedia, or news sites. No stock photo sites.`;
-
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1000,
-      tools: [{ type: "web_search_20250305", name: "web_search" }],
-      messages: [{ role: "user", content: prompt }],
-    }),
-  });
-  const data = await res.json();
-  const text = data.content?.filter(b => b.type === "text").map(b => b.text).join("") || "[]";
-  try {
-    const match = text.match(/\[[\s\S]*\]/);
-    return match ? JSON.parse(match[0]) : [];
-  } catch { return []; }
-}
 
 const days = [
   {
@@ -298,201 +278,6 @@ const days = [
     ],
   },
   {
-    id: "may16",
-    date: "May 16 (Sat)",
-    title: "Chengdu Day Trip",
-    subtitle: "Chongqing North → Chengdu → back same night",
-    emoji: "🐼",
-    color: "#f0fdf4",
-    accent: "#15803d",
-    note: "Buy train tickets on 12306 or Trip.com well in advance. Show passport at manned gate.",
-    events: [
-      {
-        time: "07:30", type: "transport", icon: "🚇",
-        title: "Head to Chongqing North Station",
-        note: "Allow 30–40min from hotel to station",
-        transport: "🚇 Metro Line 6 → Chongqing North (~30min from hotel)",
-        mapUrl: gmap("ChIJ7Wa9biczkzYRTGclxlj7u6o"),
-      },
-      {
-        time: "08:30", type: "transport", icon: "🚂",
-        title: "Train: Chongqing North → Chengdu East",
-        note: "High-speed G-train, ~1hr 20min. ~¥120–165 each way.",
-        mapUrl: gmap("ChIJ7Wa9biczkzYRTGclxlj7u6o"),
-        photoKey: "ckg_airport",
-      },
-      {
-        time: "09:50", type: "arrive", icon: "🚉",
-        title: "Arrive Chengdu East Station",
-        mapUrl: gmap("ChIJM1xd_q7P7zYRb-kYHav0Jdc"),
-        photoKey: "ckg_airport",
-      },
-      {
-        time: "10:30", type: "explore", icon: "🐼",
-        title: "Chengdu Panda Breeding Base",
-        note: "Book tickets in advance! Best before 11am when pandas are most active. ~¥55 entry. Wear comfy shoes — it's a large park. Allow ~2.5hrs.",
-        transport: "🚇 Metro Line 3 → Panda Base (~30min from station)",
-        mapUrl: gmap("ChIJ8VuaD-DQ7zYRd5EYh3BjzdM"),
-        photoKey: "panda",
-      },
-      {
-        time: "13:00", type: "food", icon: "🌶️",
-        title: "Lunch: Jinli Ancient Street",
-        note: "Historic pedestrian street — rabbit head, mapo tofu, 钟水饺 (dumplings) and Sichuan street food",
-        transport: "🚇 Metro ~15min from panda base",
-        mapUrl: gmap("ChIJIT0ZCOPE7zYR30Zs5J35lxY"),
-        photoKey: "jinli",
-        suggested: true,
-      },
-      {
-        time: "14:30", type: "explore", icon: "🏛️",
-        title: "Kuanzhai Alley (宽窄巷子)",
-        note: "Well-preserved Qing Dynasty alleys — indie cafes, teahouses, local crafts and street portrait artists.",
-        transport: "🚶 ~15min walk or short taxi from Jinli",
-        mapUrl: gmap("ChIJRxJWE9jE7zYRZVJ_scoyS4M"),
-        photoKey: "kuanzhai",
-      },
-      {
-        time: "16:30", type: "explore", icon: "🛍️",
-        title: "Browse & shopping",
-        note: "Panda souvenirs, Sichuan spice sets, local snacks to bring home",
-        mapUrl: gmap("ChIJRxJWE9jE7zYRZVJ_scoyS4M"),
-        photoKey: "kuanzhai",
-      },
-      {
-        time: "18:00", type: "food", icon: "🍲",
-        title: "Dinner in Chengdu",
-        note: "Proper Chengdu hotpot (milder than Chongqing!) or classics: 夫妻肺片, 麻婆豆腐, 回锅肉",
-        mapUrl: gmap(null, "Sichuan hotpot dinner Chengdu Jinli"),
-        photoKey: "jinli",
-        suggested: true,
-      },
-      {
-        time: "19:45", type: "transport", icon: "🚇",
-        title: "Head to Chengdu East Station",
-        note: "Leave dinner by 19:45 to make the train comfortably",
-        transport: "🚇 Metro to Chengdu East Station ~30–40min",
-        mapUrl: gmap("ChIJM1xd_q7P7zYRb-kYHav0Jdc"),
-      },
-      {
-        time: "21:00", type: "transport", icon: "🚂",
-        title: "Return train: Chengdu East → Chongqing North",
-        note: "~1hr 20min ride. Arrive Chongqing North ~22:30.",
-        mapUrl: gmap("ChIJM1xd_q7P7zYRb-kYHav0Jdc"),
-      },
-      {
-        time: "23:00", type: "arrive", icon: "🏨",
-        title: "Back in Chongqing — hotel",
-        note: "Didi from Chongqing North ~30min back to hotel. Rest up for the last full day!",
-        transport: "🚕 Didi ~30min (¥40–60)",
-        mapUrl: gmap("ChIJ7Wa9biczkzYRTGclxlj7u6o"),
-      },
-    ],
-  },
-  {
-    id: "may17",
-    date: "May 17 (Sun)",
-    title: "Pokémon + Ciqikou + 1949 Show",
-    subtitle: "Starry Street → Longhu Times → Ciqikou → 1949 → Farewell",
-    emoji: "⭐",
-    color: "#f0f9ff",
-    accent: "#0891b2",
-    events: [
-      {
-        time: "09:30", type: "explore", icon: "⭐",
-        title: "Starry Street (星光街) — Pokémon spot",
-        note: "Near Guanyinqiao Pedestrian Street — Pokémon-themed spots, street art and photo ops. Allow ~1.5hrs.",
-        transport: "🚇 Metro Line 6 → Guanyinqiao (~20min from hotel), then 🚶 ~5min walk",
-        mapUrl: gmap(null, "星光街 Starry Street Guanyinqiao Chongqing"),
-        photoKey: "starry_st",
-      },
-      {
-        time: "11:00", type: "transport", icon: "🚇",
-        title: "Travel → Longhu Times Starry Sky (龙湖时代天街)",
-        transport: "🚇 Metro Line 6 → Daping (~20min). Or Didi ~20min (¥20–30)",
-        mapUrl: gmap("ChIJ6311qCLL7DYRdlOBhUw5x5Q"),
-      },
-      {
-        time: "11:30", type: "explore", icon: "🌲",
-        title: "Longhu Times Starry Sky (龙湖时代天街) — Pokémon",
-        note: "Pokémon-themed area — merch, photo spots, themed décor. Allow ~2hrs.",
-        mapUrl: gmap("ChIJ6311qCLL7DYRdlOBhUw5x5Q"),
-        photoKey: "longhu_pokemon",
-      },
-      {
-        time: "13:30", type: "food", icon: "🍜",
-        title: "Lunch inside Longhu Times",
-        note: "Plenty of food options in the mall — grab a proper sit-down meal",
-        mapUrl: gmap("ChIJ6311qCLL7DYRdlOBhUw5x5Q"),
-        photoKey: "longhu_pokemon",
-        suggested: true,
-      },
-      {
-        time: "14:30", type: "transport", icon: "🚇",
-        title: "Travel → Ciqikou Ancient Town",
-        transport: "🚇 Metro Line 1 → Ciqikou (~25min from Daping). Or Didi ~20min (¥25–35)",
-        mapUrl: gmap("ChIJ8xTyJvjL7DYRaxlsvpdbeTE"),
-      },
-      {
-        time: "15:00", type: "explore", icon: "🏯",
-        title: "Ciqikou Ancient Town",
-        note: "Historic riverside town — temples, mahjong museums, old architecture. Great afternoon stroll. Allow ~1.5hrs.",
-        mapUrl: gmap("ChIJ8xTyJvjL7DYRaxlsvpdbeTE"),
-        photoKey: "ciqikou",
-      },
-      {
-        time: "16:30", type: "food", icon: "🌶️",
-        title: "Snacks in Ciqikou",
-        note: "Try 陈麻花 (fried dough twists), 毛血旺 before heading to the show",
-        mapUrl: gmap("ChIJ8xTyJvjL7DYRaxlsvpdbeTE"),
-        photoKey: "ciqikou",
-        suggested: true,
-      },
-      {
-        time: "17:15", type: "food", icon: "🍱",
-        title: "Early dinner near 1949 Theatre",
-        note: "Light meal before the show — restaurants and stalls around Ciqikou area",
-        transport: "🚶 Stay in Ciqikou area, theatre is nearby",
-        mapUrl: gmap("ChIJ8xTyJvjL7DYRaxlsvpdbeTE"),
-        photoKey: "ciqikou",
-        suggested: true,
-      },
-      {
-        time: "19:30", type: "explore", icon: "🎭",
-        title: "Chongqing 1949 Grand Theatre Show",
-        note: "Show time: 7:30 PM. Book on Trip.com or Klook (¥60–250). English translation device available. ~1.5hrs.",
-        mapUrl: gmap("ChIJjYJETX8zkzYRzCjjUlnEovE"),
-        photoKey: "theatre_1949",
-      },
-      {
-        time: "21:15", type: "transport", icon: "🚕",
-        title: "Travel → Jiefangbei",
-        transport: "🚕 Didi from 1949 Theatre ~25–30min (¥35–50)",
-        mapUrl: gmap("ChIJ1S7X6oY0kzYRIyiS3lG6Abg"),
-      },
-      {
-        time: "21:45", type: "explore", icon: "🛍️",
-        title: "Last souvenir shopping: Jiefangbei",
-        note: "Local spices, hotpot sauce packets, 江小白 baijiu, snacks to bring home — shops open late",
-        mapUrl: gmap("ChIJ1S7X6oY0kzYRIyiS3lG6Abg"),
-        photoKey: "jiefangbei",
-      },
-      {
-        time: "22:30", type: "food", icon: "🍜",
-        title: "Farewell supper: 重庆小面",
-        note: "One last bowl of Chongqing spicy noodles before the flight home 🌶️",
-        mapUrl: gmap("ChIJ1S7X6oY0kzYRIyiS3lG6Abg", "重庆小面 Chongqing noodles Jiefangbei"),
-        photoKey: "jiefangbei",
-        suggested: true,
-      },
-      {
-        time: "23:30", type: "note", icon: "⚠️",
-        title: "Back to hotel — prep for departure",
-        note: "Flight is 02:35 — pack everything, arrange Didi by 00:30. Set multiple alarms!",
-      },
-    ],
-  },
-  {
     id: "may18",
     date: "May 18 (Mon)",
     title: "Fly Home to Singapore",
@@ -535,9 +320,6 @@ const typeColors = {
 
 // Days shared across all plans
 const sharedDays = days.filter(d => !["may16","may17"].includes(d.id));
-
-const may16_chengdu = days.find(d => d.id === "may16"); // already Chengdu
-const may17_withChengdu = days.find(d => d.id === "may17"); // Pokémon + Ciqikou + 1949
 
 const may16_geocentric = {
   id: "may16",
@@ -612,13 +394,6 @@ const may17_noGeo = {
 };
 
 const plans = {
-  A: {
-    label: "Plan A — With Chengdu 🐼",
-    desc: "May 16: Chengdu day trip · May 17: Pokémon + Ciqikou + 1949",
-    color: "#15803d",
-    light: "#f0fdf4",
-    days16_17: [may16_chengdu, may17_withChengdu],
-  },
   B: {
     label: "Plan B — With Geocentric 🌏",
     desc: "May 16: Geocentric Exploration + 1949 · May 17: Pokémon + Ciqikou",
@@ -636,12 +411,8 @@ const plans = {
 };
 
 export default function Itinerary() {
-  const [activePlan, setActivePlan] = useState("A");
+  const [activePlan, setActivePlan] = useState("B");
   const [activeDay, setActiveDay] = useState("may12");
-  const [activeGallery, setActiveGallery] = useState(null); // { title, images[], loading }
-  const [photoIndex, setPhotoIndex] = useState(0);
-  const [photoCache, setPhotoCache] = useState({}); // cache by photoKey
-
   const plan = plans[activePlan];
   const allDays = [
     ...sharedDays.filter(d => ["may12","may13","may14","may15"].includes(d.id)),
@@ -650,96 +421,9 @@ export default function Itinerary() {
   ];
   const currentDay = allDays.find(d => d.id === activeDay) || allDays[0];
 
-  const openGallery = useCallback(async (event) => {
-    const key = event.photoKey;
-    setActiveGallery({ title: event.title, images: [], loading: true });
-    setPhotoIndex(0);
-
-    if (photoCache[key]) {
-      setActiveGallery({ title: event.title, images: photoCache[key], loading: false });
-      return;
-    }
-
-    const query = PHOTO_QUERIES[key] || event.title;
-    const urls = await fetchPlacePhotos(query);
-    const result = urls.length > 0 ? urls : [];
-    setPhotoCache(c => ({ ...c, [key]: result }));
-    setActiveGallery({ title: event.title, images: result, loading: false });
-  }, [photoCache]);
-
-  const closeGallery = () => setActiveGallery(null);
-  const prev = () => setPhotoIndex(i => (i - 1 + activeGallery.images.length) % activeGallery.images.length);
-  const next = () => setPhotoIndex(i => (i + 1) % activeGallery.images.length);
-
   return (
     <div style={{ fontFamily: "'Georgia', serif", background: "#fafaf8", minHeight: "100vh" }}>
 
-      {/* ── Photo Modal ── */}
-      {activeGallery && (
-        <div onClick={closeGallery} style={{
-          position: "fixed", inset: 0, zIndex: 9999,
-          background: "rgba(0,0,0,0.92)",
-          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-          padding: "20px 16px",
-        }}>
-          <div style={{ color: "white", marginBottom: 14, textAlign: "center" }}>
-            <div style={{ fontSize: 18, fontWeight: 700 }}>{activeGallery.title}</div>
-            {!activeGallery.loading && activeGallery.images.length > 0 && (
-              <div style={{ fontSize: 11, opacity: 0.5, marginTop: 4 }}>Photo {photoIndex + 1} of {activeGallery.images.length}</div>
-            )}
-          </div>
-
-          {activeGallery.loading ? (
-            <div style={{ color: "white", textAlign: "center", padding: 40 }}>
-              <div style={{ fontSize: 40, marginBottom: 16 }}>🔍</div>
-              <div style={{ fontSize: 14, opacity: 0.8 }}>Searching for photos...</div>
-              <div style={{ fontSize: 12, opacity: 0.5, marginTop: 8 }}>This takes a few seconds</div>
-            </div>
-          ) : activeGallery.images.length === 0 ? (
-            <div style={{ color: "white", textAlign: "center", padding: 40 }}>
-              <div style={{ fontSize: 40, marginBottom: 16 }}>😔</div>
-              <div style={{ fontSize: 14, opacity: 0.8 }}>No photos found — try searching on Google Images!</div>
-            </div>
-          ) : (
-            <div onClick={e => e.stopPropagation()} style={{ position: "relative", maxWidth: 580, width: "92vw" }}>
-              <img
-                key={activeGallery.images[photoIndex]}
-                src={activeGallery.images[photoIndex]}
-                alt={activeGallery.title}
-                style={{ width: "100%", maxHeight: "58vh", objectFit: "cover", borderRadius: 12, display: "block", boxShadow: "0 8px 40px rgba(0,0,0,0.6)" }}
-                onError={e => { e.target.style.opacity = "0.3"; e.target.style.minHeight = "200px"; }}
-              />
-              {activeGallery.images.length > 1 && (<>
-                <button onClick={prev} style={{
-                  position: "absolute", left: -44, top: "50%", transform: "translateY(-50%)",
-                  background: "rgba(255,255,255,0.2)", border: "2px solid rgba(255,255,255,0.4)",
-                  color: "white", width: 36, height: 36, borderRadius: "50%", fontSize: 20,
-                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                }}>‹</button>
-                <button onClick={next} style={{
-                  position: "absolute", right: -44, top: "50%", transform: "translateY(-50%)",
-                  background: "rgba(255,255,255,0.2)", border: "2px solid rgba(255,255,255,0.4)",
-                  color: "white", width: 36, height: 36, borderRadius: "50%", fontSize: 20,
-                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                }}>›</button>
-              </>)}
-            </div>
-          )}
-
-          {!activeGallery.loading && activeGallery.images.length > 1 && (
-            <div onClick={e => e.stopPropagation()} style={{ display: "flex", gap: 6, marginTop: 14 }}>
-              {activeGallery.images.map((_, idx) => (
-                <div key={idx} onClick={() => setPhotoIndex(idx)} style={{
-                  width: idx === photoIndex ? 20 : 8, height: 8, borderRadius: 4,
-                  background: idx === photoIndex ? "white" : "rgba(255,255,255,0.35)",
-                  cursor: "pointer", transition: "all 0.2s",
-                }} />
-              ))}
-            </div>
-          )}
-          <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, marginTop: 16 }}>Tap outside to close</div>
-        </div>
-      )}
 
       <div style={{
         background: "linear-gradient(135deg, #1e3a5f 0%, #2d6a4f 100%)",
@@ -841,19 +525,24 @@ export default function Itinerary() {
                       {event.transport && (
                         <div style={{ fontSize: 12, color: "#2563eb", background: "#eff6ff", padding: "4px 8px", borderRadius: 6 }}>{event.transport}</div>
                       )}
-                      {event.mapUrl && (
-                        <a href={event.mapUrl} target="_blank" rel="noopener noreferrer" style={{
+                      {event.mapUrl && (<>
+                        <a href={amap(event.title)} target="_blank" rel="noopener noreferrer" style={{
                           display: "inline-flex", alignItems: "center", gap: 4,
                           fontSize: 12, color: "#16a34a", background: "#f0fdf4",
                           padding: "4px 8px", borderRadius: 6, textDecoration: "none", border: "1px solid #bbf7d0",
                         }}>📍 Maps</a>
-                      )}
+                        <a href={didi(event.title)} target="_blank" rel="noopener noreferrer" style={{
+                          display: "inline-flex", alignItems: "center", gap: 4,
+                          fontSize: 12, color: "#d97706", background: "#fffbeb",
+                          padding: "4px 8px", borderRadius: 6, textDecoration: "none", border: "1px solid #fde68a",
+                        }}>🚕 Didi</a>
+                      </>)}
                       {event.photoKey && !event.suggested && (
-                        <button onClick={() => openGallery(event)} style={{
+                        <a href={`https://www.google.com/search?q=${encodeURIComponent(PHOTO_QUERIES[event.photoKey] || event.title)}&tbm=isch`} target="_blank" rel="noopener noreferrer" style={{
+                          display: "inline-flex", alignItems: "center", gap: 4,
                           fontSize: 12, color: "#7c3aed", background: "#f5f3ff",
-                          padding: "4px 8px", borderRadius: 6, border: "1px solid #ddd6fe",
-                          cursor: "pointer", fontFamily: "inherit", display: "inline-flex", alignItems: "center", gap: 4,
-                        }}>📸 Photos</button>
+                          padding: "4px 8px", borderRadius: 6, textDecoration: "none", border: "1px solid #ddd6fe",
+                        }}>📸 Photos</a>
                       )}
                     </div>
                   </div>
@@ -871,8 +560,7 @@ export default function Itinerary() {
             "🎭 Book Chongqing 1949 show in advance on Trip.com or Klook",
             "🦀 Li Bai Crab Roe Noodles — go early to avoid long queues",
             "🍽️ Li Yan Ba Guo Court Feast — Klook is cheaper than Trip.com, book in advance",
-            "🚕 Plan B only: Pre-book Didi for Geocentric Exploration 4 days ahead (¥133.6, 82min each way)",
-            "🚂 Plan A only: Buy Chengdu train tickets on 12306 or Trip.com well in advance",
+            "🚕 Plan B: Pre-book Didi for Geocentric Exploration 4 days ahead (¥133.6, 82min each way)",
             "✈️ May 18 flight is 02:35 AM — arrange Didi by 00:30, set multiple alarms!",
           ].map((tip, i) => (
             <div key={i} style={{ fontSize: 13, marginBottom: 6, opacity: 0.88, lineHeight: 1.5 }}>{tip}</div>
