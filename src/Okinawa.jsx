@@ -63,6 +63,7 @@ const BOOKMARKS = [
     places: [
       { name: "Cape Hedo",             coord: [26.867, 128.261] },
       { name: "Cape Maeda",            coord: [26.444, 127.763] },
+      { name: "Blue Cave",             coord: [26.444, 127.773] },
       { name: "Cape Chinen Park",      coord: [26.153, 127.795] },
       { name: "Kayauchi Banta",        coord: [26.854, 128.249] },
       { name: "Bise-Fukugi Tree Road", coord: [26.704, 127.881] },
