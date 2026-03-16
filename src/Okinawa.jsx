@@ -216,10 +216,10 @@ export default function Okinawa() {
         </div>
 
         {/* Leaflet Map */}
-        <div style={{ borderRadius: 16, overflow: "hidden", border: "1.5px solid #d1d5db", height: 420 }}>
+        <div style={{ borderRadius: 16, overflow: "hidden", border: "1.5px solid #d1d5db", height: 700 }}>
           <MapContainer
-            center={[26.5, 127.95]}
-            zoom={10}
+            center={[26.49, 127.97]}
+            zoom={9}
             style={{ height: "100%", width: "100%" }}
             scrollWheelZoom={true}
           >
