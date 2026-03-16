@@ -11,131 +11,131 @@ const BOOKMARKS = [
     id: "cafe", title: "Café & Drinks", emoji: "☕",
     color: "#92400e", light: "#fef8ed", border: "#f5d5a0",
     places: [
-      { name: "Zhyvago Coffee Roastery",    coord: [26.301, 127.746] },
-      { name: "PST Okinawa by the Sea",     coord: [26.521, 127.898] },
-      { name: "BURUNO",                     coord: [26.527, 127.984] },
-      { name: "Bookcafe Okinawa Rail",      coord: [26.244, 127.713] },
+      { name: "Zhyvago Coffee Roastery",    coord: [26.301, 127.746], hours: "7:00–22:00" },
+      { name: "PST Okinawa by the Sea",     coord: [26.521, 127.898], hours: "12:00–15:00, 17:00–22:00" },
+      { name: "BURUNO",                     coord: [26.527, 127.984], hours: "9:00–17:00" },
+      { name: "Bookcafe Okinawa Rail",      coord: [26.244, 127.713], hours: "11:00–17:00 (closed Mon & Tue)" },
     ],
   },
   {
     id: "food", title: "Food & Restaurants", emoji: "🍜",
     color: "#b91c1c", light: "#fff5f5", border: "#fca5a5",
     places: [
-      { name: "Takaesu Soba",                              coord: [26.341, 127.764] },
-      { name: "Miyazato Soba",                             coord: [26.155, 127.669] },
-      { name: "Pizzeria da Enzo",                          coord: [26.449, 127.804] },
-      { name: "Hamanoya Restaurant",                       coord: [26.421, 127.822] },
-      { name: "Nagumagai Restaurant",                      coord: [26.680, 128.270] },
-      { name: "Restaurant Flipper",                        coord: [26.652, 128.100] },
-      { name: "Umi-to-Mugi-to",                            coord: [26.668, 127.875] },
-      { name: "Sunrise Higashi",                           coord: [26.697, 128.271] },
-      { name: "Itoman Fishing Cooperative Fish Center",    coord: [26.117, 127.665] },
+      { name: "Takaesu Soba",                              coord: [26.341, 127.764], hours: "10:00–15:45 (closed Sun)" },
+      { name: "Miyazato Soba",                             coord: [26.155, 127.669], hours: "10:00–sold out (closed Wed)" },
+      { name: "Pizzeria da Enzo",                          coord: [26.449, 127.804], hours: "11:30–15:00, 17:30–22:00" },
+      { name: "Hamanoya Restaurant",                       coord: [26.421, 127.822], hours: "11:00–21:30 (L.O. 20:00)" },
+      { name: "Nagumagai Restaurant",                      coord: [26.680, 128.270], hours: "Call ahead (closed Thu)" },
+      { name: "Restaurant Flipper",                        coord: [26.652, 128.100], hours: "10:30–22:00 (closed Wed)" },
+      { name: "Umi-to-Mugi-to",                            coord: [26.668, 127.875], hours: "Call ahead (closed Tue)" },
+      { name: "Sunrise Higashi",                           coord: [26.697, 128.271], hours: "7:00–21:00" },
+      { name: "Itoman Fishing Cooperative Fish Center",    coord: [26.117, 127.665], hours: "10:00–19:00" },
     ],
   },
   {
     id: "shopping", title: "Shopping", emoji: "🛍️",
     color: "#7c3aed", light: "#faf5ff", border: "#c4b5fd",
     places: [
-      { name: "AEON MALL Okinawa Rycom",      coord: [26.308, 127.797] },
-      { name: "Pokemon Center Okinawa",       coord: [26.308, 127.797] },
-      { name: "Modeler's Core",               coord: [26.380, 127.803] },
-      { name: "Rider's Shop Stec5",           coord: [26.322, 127.793] },
-      { name: "2nd LIFE",                     coord: [26.247, 127.717] },
-      { name: "Tsukumo",                      coord: [26.219, 127.688] },
-      { name: "Surugaya Naha Okiei-dori",     coord: [26.216, 127.689] },
-      { name: "Nuchima-su Salt Factory",      coord: [26.386, 127.972] },
+      { name: "AEON MALL Okinawa Rycom",      coord: [26.308, 127.797], hours: "8:00–23:00 (varies by floor)" },
+      { name: "Pokemon Center Okinawa",       coord: [26.308, 127.797], hours: "10:00–21:00" },
+      { name: "Modeler's Core",               coord: [26.380, 127.803], hours: "10:00–20:00" },
+      { name: "Rider's Shop Stec5",           coord: [26.322, 127.793], hours: "10:00–19:00" },
+      { name: "2nd LIFE",                     coord: [26.247, 127.717], hours: "11:00–19:00" },
+      { name: "Tsukumo",                      coord: [26.219, 127.688], hours: "10:00–21:00" },
+      { name: "Surugaya Naha Okiei-dori",     coord: [26.216, 127.689], hours: "11:00–20:00" },
+      { name: "Nuchima-su Salt Factory",      coord: [26.386, 127.972], hours: "9:00–18:00" },
     ],
   },
   {
     id: "culture", title: "History & Culture", emoji: "🏯",
     color: "#b45309", light: "#fffbeb", border: "#fcd34d",
     places: [
-      { name: "Katsuren Castle Ruins",                      coord: [26.331, 127.879] },
-      { name: "Peace Memorial Park",                        coord: [26.095, 127.725] },
-      { name: "Okinawa World",                              coord: [26.171, 127.742] },
-      { name: "Yanbaru Kuina Ecological Exhibition Center", coord: [26.712, 128.254] },
-      { name: "Higashi-son Fureai Hirugi Park",             coord: [26.699, 128.170] },
+      { name: "Katsuren Castle Ruins",                      coord: [26.331, 127.879], hours: "9:00–18:00" },
+      { name: "Peace Memorial Park",                        coord: [26.095, 127.725], hours: "8:00–22:00 (museum 9:00–17:00)" },
+      { name: "Okinawa World",                              coord: [26.171, 127.742], hours: "9:00–17:30 (last entry 16:00)" },
+      { name: "Yanbaru Kuina Ecological Exhibition Center", coord: [26.712, 128.254], hours: "9:00–17:00 (closed Wed)" },
+      { name: "Higashi-son Fureai Hirugi Park",             coord: [26.699, 128.170], hours: "9:00–18:00" },
     ],
   },
   {
     id: "nature", title: "Nature & Scenery", emoji: "🌊",
     color: "#0369a1", light: "#f0f9ff", border: "#7dd3fc",
     places: [
-      { name: "Cape Hedo",             coord: [26.867, 128.261] },
-      { name: "Cape Maeda",            coord: [26.444, 127.763] },
-      { name: "Blue Cave",             coord: [26.444, 127.773] },
-      { name: "Cape Chinen Park",      coord: [26.153, 127.795] },
-      { name: "Kayauchi Banta",        coord: [26.854, 128.249] },
-      { name: "Bise-Fukugi Tree Road", coord: [26.704, 127.881] },
-      { name: "Kanucha Beach",         coord: [26.549, 128.076] },
+      { name: "Cape Hedo",             coord: [26.867, 128.261], hours: "24 hr" },
+      { name: "Cape Maeda",            coord: [26.444, 127.763], hours: "24 hr (diving ops 8:00–17:00)" },
+      { name: "Blue Cave",             coord: [26.444, 127.773], hours: "Dive tours 8:00–17:00" },
+      { name: "Cape Chinen Park",      coord: [26.153, 127.795], hours: "24 hr" },
+      { name: "Kayauchi Banta",        coord: [26.854, 128.249], hours: "24 hr" },
+      { name: "Bise-Fukugi Tree Road", coord: [26.704, 127.881], hours: "24 hr" },
+      { name: "Kanucha Beach",         coord: [26.549, 128.076], hours: "24 hr" },
     ],
   },
   {
     id: "attractions", title: "Attractions & Theme Parks", emoji: "🎡",
     color: "#15803d", light: "#f0fdf4", border: "#86efac",
     places: [
-      { name: "Okinawa Churaumi Aquarium",      coord: [26.694, 127.878] },
-      { name: "DMM Kariyushi Aquarium Okinawa", coord: [26.156, 127.650] },
-      { name: "Junglia Okinawa",                coord: [26.642, 127.974] },
-      { name: "Nago Pineapple Park",            coord: [26.616, 127.970] },
-      { name: "Orion Happy Park",               coord: [26.589, 127.983] },
-      { name: "Ryujin Hot Springs",             coord: [26.193, 127.669] },
-      { name: "PARCO CITY Observation Deck",    coord: [26.289, 127.737] },
-      { name: "ricoland Okinawa",               coord: [26.247, 127.736] },
+      { name: "Okinawa Churaumi Aquarium",      coord: [26.694, 127.878], hours: "8:30–18:30 (L.O. 17:30)" },
+      { name: "DMM Kariyushi Aquarium Okinawa", coord: [26.156, 127.650], hours: "9:00–20:00" },
+      { name: "Junglia Okinawa",                coord: [26.642, 127.974], hours: "10:00–19:00 (hours vary)" },
+      { name: "Nago Pineapple Park",            coord: [26.616, 127.970], hours: "10:00–18:00" },
+      { name: "Orion Happy Park",               coord: [26.589, 127.983], hours: "9:30–17:00 (closed Wed & Thu)" },
+      { name: "Ryujin Hot Springs",             coord: [26.193, 127.669], hours: "6:00–24:00" },
+      { name: "PARCO CITY Observation Deck",    coord: [26.289, 127.737], hours: "10:00–23:00" },
+      { name: "ricoland Okinawa",               coord: [26.247, 127.736], hours: "11:00–20:00 (10:00–19:30 weekend)" },
     ],
   },
   {
     id: "roadside", title: "Roadside Stations & Markets", emoji: "🛣️",
     color: "#ea580c", light: "#fff7ed", border: "#fdba74",
     places: [
-      { name: "Yuiyui Kunigami (Michi no Eki)",              coord: [26.732, 128.169] },
-      { name: "Ogimi Roadside Station / Yambaru-no-mori",    coord: [26.698, 128.151] },
-      { name: "Road Station Yanbaru Pineapple Hill Aha",     coord: [26.705, 128.166] },
-      { name: "Roadside Station Kyoda",                      coord: [26.552, 127.969] },
-      { name: "Ginoza Roadside Station",                     coord: [26.474, 127.952] },
+      { name: "Yuiyui Kunigami (Michi no Eki)",              coord: [26.732, 128.169], hours: "9:00–18:00" },
+      { name: "Ogimi Roadside Station / Yambaru-no-mori",    coord: [26.698, 128.151], hours: "9:00–18:00" },
+      { name: "Road Station Yanbaru Pineapple Hill Aha",     coord: [26.705, 128.166], hours: "9:00–18:00" },
+      { name: "Roadside Station Kyoda",                      coord: [26.552, 127.969], hours: "9:00–18:00" },
+      { name: "Ginoza Roadside Station",                     coord: [26.474, 127.952], hours: "9:00–18:00" },
     ],
   },
   {
     id: "bath", title: "Baths & Showers", emoji: "🛁",
     color: "#0d9488", light: "#f0fdfa", border: "#99f6e4",
     places: [
-      { name: "Ryujin Hot Springs (Day Use)",    coord: [26.193, 127.669] },
-      { name: "Terme VILLA Chura-yu (Chatan)",  coord: [26.317, 127.759] },
-      { name: "Rikkarikkayu (Naha)",            coord: [26.213, 127.684] },
-      { name: "Kouri Beach Coin Showers",       coord: [26.695, 128.022] },
-      { name: "Okuma Beach Shower Facilities",  coord: [26.729, 128.134] },
+      { name: "Ryujin Hot Springs (Day Use)",    coord: [26.193, 127.669], hours: "6:00–24:00" },
+      { name: "Terme VILLA Chura-yu (Chatan)",  coord: [26.317, 127.759], hours: "7:00–23:00 (L.O. 22:00)" },
+      { name: "Rikkarikkayu (Naha)",            coord: [26.213, 127.684], hours: "6:00–23:00" },
+      { name: "Kouri Beach Coin Showers",       coord: [26.695, 128.022], hours: "9:00–18:00" },
+      { name: "Okuma Beach Shower Facilities",  coord: [26.729, 128.134], hours: "9:00–18:00" },
     ],
   },
   {
     id: "toilet", title: "Public Toilets", emoji: "🚻",
     color: "#475569", light: "#f8fafc", border: "#cbd5e1",
     places: [
-      { name: "Naminoue Beach Park Toilet (24hr)",      coord: [26.223, 127.681] },
-      { name: "Cape Zanpa Park Toilet (24hr)",          coord: [26.408, 127.719] },
-      { name: "Emerald Beach / Ocean Expo Park (24hr)", coord: [26.697, 127.867] },
-      { name: "Okuma Beach Park Toilet (24hr)",         coord: [26.729, 128.135] },
-      { name: "Cape Hedo Toilet",                       coord: [26.865, 128.260] },
+      { name: "Naminoue Beach Park Toilet",      coord: [26.223, 127.681], hours: "24 hr" },
+      { name: "Cape Zanpa Park Toilet",          coord: [26.408, 127.719], hours: "24 hr" },
+      { name: "Emerald Beach / Ocean Expo Park", coord: [26.697, 127.867], hours: "24 hr" },
+      { name: "Okuma Beach Park Toilet",         coord: [26.729, 128.135], hours: "24 hr" },
+      { name: "Cape Hedo Toilet",                coord: [26.865, 128.260], hours: "24 hr" },
     ],
   },
   {
     id: "petrol", title: "Petrol Stations", emoji: "⛽",
     color: "#dc2626", light: "#fef2f2", border: "#fca5a5",
     places: [
-      { name: "ENEOS Urasoe (near Asoviva Works)",       coord: [26.249, 127.721] },
-      { name: "ENEOS Nago (Route 58)",                   coord: [26.597, 127.975] },
-      { name: "Last Station before Cape Hedo (Kunigami)", coord: [26.729, 128.151] },
+      { name: "ENEOS Urasoe (near Asoviva Works)",        coord: [26.249, 127.721], hours: "24 hr" },
+      { name: "ENEOS Nago (Route 58)",                    coord: [26.597, 127.975], hours: "24 hr" },
+      { name: "Last Station before Cape Hedo (Kunigami)", coord: [26.729, 128.151], hours: "7:00–20:00" },
     ],
   },
   {
     id: "campsite", title: "Campsites", emoji: "⛺",
     color: "#4d7c0f", light: "#f7fee7", border: "#bef264",
     places: [
-      { name: "Yagaji Beach Campsite (Nago) 🚿🚻",         coord: [26.659, 128.015] },
-      { name: "Hiji Waterfall Campsite (Kunigami) 🚿🚻",   coord: [26.719, 128.180] },
-      { name: "Kunigami Forest Park Campsite 🚿🚻",        coord: [26.789, 128.205] },
-      { name: "Tonokiya Camp (Ogimi) 🚿🚻",               coord: [26.715, 128.088] },
-      { name: "Okuma Beach Campsite (Kunigami) 🚿🚻",     coord: [26.729, 128.134] },
-      { name: "Okinawa Sports Park Auto Campjo 🚿🚻",     coord: [26.357, 127.808] },
+      { name: "Yagaji Beach Campsite (Nago) 🚿🚻",         coord: [26.659, 128.015], hours: "Check-in 13:00 / Out 11:00" },
+      { name: "Hiji Waterfall Campsite (Kunigami) 🚿🚻",   coord: [26.719, 128.180], hours: "Check-in 14:00 / Out 10:00" },
+      { name: "Kunigami Forest Park Campsite 🚿🚻",        coord: [26.789, 128.205], hours: "Check-in 14:00 / Out 10:00" },
+      { name: "Tonokiya Camp (Ogimi) 🚿🚻",               coord: [26.715, 128.088], hours: "Check-in 13:00 / Out 11:00" },
+      { name: "Okuma Beach Campsite (Kunigami) 🚿🚻",     coord: [26.729, 128.134], hours: "Check-in 14:00 / Out 11:00" },
+      { name: "Okinawa Sports Park Auto Campjo 🚿🚻",     coord: [26.357, 127.808], hours: "Check-in 15:00 / Out 10:00" },
     ],
   },
 ];
@@ -234,40 +234,97 @@ const DAYS = [
   },
 ];
 
-// Clockwise driving circuit: Urasoe → South → West coast north → Cape Hedo → East coast south → Urasoe
-const ROUTE_PATH = [
-  [26.249, 127.721], // Asoviva Works (start)
-  [26.217, 127.687], // Naha
-  [26.158, 127.673], // Naha south
-  [26.117, 127.665], // Itoman
-  [26.097, 127.725], // Peace Memorial Park
-  [26.153, 127.795], // Cape Chinen
-  [26.171, 127.742], // Okinawa World
-  [26.217, 127.687], // back through Naha
-  [26.249, 127.721], // Urasoe
-  [26.317, 127.759], // Chatan / Blue Cave day
-  [26.408, 127.719], // Cape Zanpa
-  [26.444, 127.763], // Cape Maeda / Blue Cave ⭐
-  [26.490, 127.840], // Onna village
-  [26.552, 127.969], // Roadside Station Kyoda
-  [26.591, 127.978], // Nago
-  [26.694, 127.878], // Churaumi Aquarium (Motobu)
-  [26.704, 127.881], // Bise Fukugi
-  [26.680, 127.930], // Nakijin
-  [26.729, 128.134], // Okuma (northwest)
-  [26.800, 128.200], // northwest Kunigami coast
-  [26.867, 128.261], // Cape Hedo ⭐
-  [26.854, 128.249], // Kayauchi Banta
-  [26.789, 128.205], // Kunigami forest
-  [26.732, 128.169], // Yuiyui Kunigami
-  [26.719, 128.180], // Hiji Waterfall
-  [26.715, 128.088], // Tonokiya / Ogimi
-  [26.699, 128.170], // Higashi-son
-  [26.549, 128.076], // Kanucha Beach area
-  [26.474, 127.952], // Ginoza
-  [26.331, 127.879], // Katsuren
-  [26.308, 127.797], // AEON Rycom / Uruma
-  [26.249, 127.721], // back to Asoviva Works
+// Per-day driving routes with color matching the day
+const DAY_ROUTES = [
+  {
+    id: "may7", label: "May 7", color: "#0369a1",
+    path: [
+      [26.249, 127.721], // Asoviva Works / start
+      [26.217, 127.687], // Naha city
+      [26.158, 127.673], // Naha south
+      [26.117, 127.665], // Itoman (Fish Center, Soba)
+      [26.097, 127.725], // Peace Memorial Park
+      [26.153, 127.795], // Cape Chinen
+      [26.171, 127.742], // Okinawa World
+      [26.217, 127.687], // back through Naha
+      [26.249, 127.721], // Urasoe
+      [26.357, 127.808], // Sports Park camp ⛺
+    ],
+  },
+  {
+    id: "may8", label: "May 8", color: "#0891b2",
+    path: [
+      [26.357, 127.808], // Sports Park camp start
+      [26.249, 127.721], // through Urasoe
+      [26.317, 127.759], // Chatan
+      [26.408, 127.719], // Cape Zanpa coast
+      [26.444, 127.763], // Cape Maeda / Blue Cave ⭐
+      [26.490, 127.820], // Onna village
+      [26.317, 127.759], // back to Chatan (Terme VILLA)
+      [26.308, 127.797], // AEON Rycom
+      [26.400, 127.820], // heading north
+      [26.500, 127.870], // Route 58 north
+      [26.591, 127.978], // Nago
+      [26.659, 128.015], // Yagaji Beach camp ⛺
+    ],
+  },
+  {
+    id: "may9", label: "May 9", color: "#15803d",
+    path: [
+      [26.659, 128.015], // Yagaji camp start
+      [26.616, 127.970], // Pineapple Park
+      [26.589, 127.983], // Orion Happy Park
+      [26.591, 127.978], // Nago
+      [26.668, 127.875], // Umi-to-Mugi-to
+      [26.694, 127.878], // Churaumi Aquarium
+      [26.704, 127.881], // Bise-Fukugi Tree Road
+      [26.680, 127.930], // Nakijin area
+      [26.642, 127.974], // Junglia Okinawa
+      [26.680, 128.020], // heading northeast
+      [26.729, 128.134], // Okuma Beach camp ⛺
+    ],
+  },
+  {
+    id: "may10", label: "May 10", color: "#7c3aed",
+    path: [
+      [26.729, 128.134], // Okuma camp start
+      [26.780, 128.165], // northwest Kunigami coast
+      [26.800, 128.200], // further north
+      [26.867, 128.261], // Cape Hedo ⭐
+      [26.854, 128.249], // Kayauchi Banta
+      [26.789, 128.205], // Kunigami forest
+      [26.732, 128.169], // Yuiyui Kunigami
+      [26.719, 128.180], // Hiji Waterfall
+      [26.715, 128.088], // Tonokiya / Ogimi
+      [26.699, 128.170], // Higashi-son (mangroves)
+      [26.697, 128.271], // Sunrise Higashi (dinner)
+      [26.719, 128.180], // camp ⛺ (Hiji/Tonokiya)
+    ],
+  },
+  {
+    id: "may11", label: "May 11", color: "#b45309",
+    path: [
+      [26.719, 128.180], // camp start
+      [26.698, 128.151], // Ogimi Roadside Station
+      [26.474, 127.952], // Ginoza Roadside
+      [26.400, 127.860], // Route 329 south
+      [26.331, 127.879], // Katsuren Castle
+      [26.308, 127.797], // AEON Rycom
+      [26.280, 127.750], // heading to Naha
+      [26.156, 127.650], // DMM Kariyushi Aquarium
+      [26.219, 127.688], // Kokusai Dori / Naha
+      [26.289, 127.737], // PARCO CITY
+      [26.249, 127.721], // Urasoe / camp ⛺
+    ],
+  },
+  {
+    id: "may12", label: "May 12", color: "#c2410c",
+    path: [
+      [26.249, 127.721], // camp / Asoviva Works
+      [26.217, 127.687], // Naha city (shopping)
+      [26.209, 127.647], // Naha Airport ✈️
+    ],
+  },
 ];
 
 const makeIcon = (emoji, color) =>
@@ -282,12 +339,17 @@ const makeIcon = (emoji, color) =>
 export default function Okinawa() {
   const [activeTab, setActiveTab] = useState("may7");
   const [activeFilter, setActiveFilter] = useState(null);
+  const [activeDayRoutes, setActiveDayRoutes] = useState(null); // null = show all
 
   const day = DAYS.find(d => d.id === activeTab);
 
   const visibleCats = activeFilter
     ? BOOKMARKS.filter(c => c.id === activeFilter)
     : BOOKMARKS;
+
+  const visibleRoutes = activeDayRoutes
+    ? DAY_ROUTES.filter(r => r.id === activeDayRoutes)
+    : DAY_ROUTES;
 
   const tabBtn = (id, label, isActive) => (
     <button key={id} onClick={() => setActiveTab(id)} style={{
@@ -409,6 +471,44 @@ export default function Okinawa() {
               ))}
             </div>
 
+            {/* Route day filter */}
+            <div style={{ marginBottom: 10 }}>
+              <div style={{ fontSize: 11, color: "#6b7280", textAlign: "center", marginBottom: 6, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" }}>
+                Route Filter
+              </div>
+              <div style={{ display: "flex", gap: 5, flexWrap: "wrap", justifyContent: "center" }}>
+                <button onClick={() => setActiveDayRoutes(null)} style={{
+                  padding: "4px 10px", borderRadius: 20, border: "none",
+                  background: !activeDayRoutes ? "#111827" : "#e5e7eb",
+                  color: !activeDayRoutes ? "white" : "#374151",
+                  fontSize: 11, cursor: "pointer", fontFamily: "inherit", fontWeight: !activeDayRoutes ? 700 : 400,
+                }}>All Days</button>
+                {DAY_ROUTES.map(r => (
+                  <button key={r.id} onClick={() => setActiveDayRoutes(activeDayRoutes === r.id ? null : r.id)} style={{
+                    padding: "4px 10px", borderRadius: 20,
+                    background: activeDayRoutes === r.id ? r.color : "white",
+                    color: activeDayRoutes === r.id ? "white" : r.color,
+                    fontSize: 11, cursor: "pointer", fontFamily: "inherit",
+                    fontWeight: activeDayRoutes === r.id ? 700 : 400,
+                    border: `1.5px solid ${r.color}`,
+                  }}>{r.label}</button>
+                ))}
+              </div>
+            </div>
+
+            {/* Route legend */}
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center", marginBottom: 12 }}>
+              {DAY_ROUTES.map(r => (
+                <div key={r.id} style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "#374151" }}>
+                  <div style={{
+                    width: 24, height: 3, background: r.color, borderRadius: 2,
+                    opacity: !activeDayRoutes || activeDayRoutes === r.id ? 1 : 0.25,
+                  }} />
+                  <span style={{ opacity: !activeDayRoutes || activeDayRoutes === r.id ? 1 : 0.4 }}>{r.label}</span>
+                </div>
+              ))}
+            </div>
+
             {/* Leaflet Map */}
             <div style={{ borderRadius: 16, overflow: "hidden", border: "1.5px solid #d1d5db", height: 700 }}>
                 <MapContainer
@@ -421,10 +521,13 @@ export default function Okinawa() {
                     attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
-                  <Polyline
-                    positions={ROUTE_PATH}
-                    pathOptions={{ color: "#0891b2", weight: 3, opacity: 0.75, dashArray: "8 5" }}
-                  />
+                  {visibleRoutes.map(r => (
+                    <Polyline
+                      key={r.id}
+                      positions={r.path}
+                      pathOptions={{ color: r.color, weight: 3.5, opacity: 0.85, dashArray: "8 5" }}
+                    />
+                  ))}
                   {visibleCats.map(cat =>
                     cat.places.map((place, i) => (
                       <Marker
@@ -433,13 +536,18 @@ export default function Okinawa() {
                         icon={makeIcon(cat.emoji, cat.color)}
                       >
                         <Popup>
-                          <div style={{ minWidth: 140 }}>
+                          <div style={{ minWidth: 160 }}>
                             <div style={{
                               background: cat.color, color: "white",
                               margin: "-7px -7px 8px", padding: "6px 10px",
                               borderRadius: "4px 4px 0 0", fontSize: 12, fontWeight: 700,
                             }}>{cat.emoji} {cat.title}</div>
-                            <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 6 }}>{place.name}</div>
+                            <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 4 }}>{place.name}</div>
+                            {place.hours && (
+                              <div style={{ fontSize: 11, color: "#374151", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
+                                <span>🕐</span><span>{place.hours}</span>
+                              </div>
+                            )}
                             <a href={gmaps(place.name)} target="_blank" rel="noopener noreferrer"
                               style={{ fontSize: 11, color: "#16a34a", textDecoration: "none" }}>
                               📍 Open in Google Maps
@@ -476,22 +584,27 @@ export default function Okinawa() {
                     {cat.places.map((place, i) => (
                       <div key={i} style={{
                         display: "flex", alignItems: "center", justifyContent: "space-between",
-                        background: "white", borderRadius: 8, padding: "7px 12px",
+                        background: "white", borderRadius: 8, padding: "8px 12px",
                         border: `1px solid ${cat.border}`,
                       }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, minWidth: 0 }}>
                           <span style={{
                             color: "white", background: cat.color, fontWeight: 700, fontSize: 11,
-                            minWidth: 20, height: 20, borderRadius: 10,
+                            minWidth: 20, height: 20, borderRadius: 10, flexShrink: 0,
                             display: "flex", alignItems: "center", justifyContent: "center",
                           }}>{i + 1}</span>
-                          <span style={{ fontSize: 13 }}>{place.name}</span>
+                          <div style={{ minWidth: 0 }}>
+                            <div style={{ fontSize: 13 }}>{place.name}</div>
+                            {place.hours && (
+                              <div style={{ fontSize: 10, color: "#6b7280", marginTop: 1 }}>🕐 {place.hours}</div>
+                            )}
+                          </div>
                         </div>
                         <a href={gmaps(place.name)} target="_blank" rel="noopener noreferrer" style={{
-                          display: "inline-flex", alignItems: "center", gap: 3,
+                          display: "inline-flex", alignItems: "center", gap: 3, flexShrink: 0,
                           fontSize: 11, color: "#16a34a", background: "#f0fdf4",
                           padding: "3px 8px", borderRadius: 6, textDecoration: "none",
-                          border: "1px solid #bbf7d0", whiteSpace: "nowrap", flexShrink: 0,
+                          border: "1px solid #bbf7d0", whiteSpace: "nowrap", marginLeft: 8,
                         }}>📍 Maps</a>
                       </div>
                     ))}

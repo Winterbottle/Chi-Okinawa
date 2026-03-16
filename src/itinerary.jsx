@@ -46,6 +46,9 @@ const PHOTO_QUERIES = {
   ckg_airport:    "Chongqing Jiangbei International Airport terminal",
   hotel_cq:       "Chongqing riverside hotel Jiefangbei Hongyadong view",
   liyan:          "Li Yan Ba Guo 礼宴巴国 Chongqing court feast banquet",
+  wulong_bridges: "Three Natural Bridges Wulong Chongqing limestone karst arches Tiansheng",
+  wulong_gorge:   "Longshuixia Fissure Gorge Wulong Chongqing slot canyon waterfall suspension bridge",
+  cqeast_station: "Chongqing East Station 重庆东站 HSR high speed rail terminal",
 };
 
 
@@ -390,6 +393,31 @@ const may16_noGeo = {
   ],
 };
 
+const may16_wulong = {
+  id: "may16",
+  date: "May 16 (Sat)",
+  title: "Wulong Karst + 1949 Show",
+  subtitle: "Didi to station → 38min HSR → Three Natural Bridges → Longshuixia → 1949",
+  emoji: "🏔️",
+  color: "#f0fdf4",
+  accent: "#15803d",
+  note: "UNESCO World Heritage Site. 26 trains daily from Chongqing East — easy to catch one around 9AM. Buy ticket on Trip.com or 12306 in advance!",
+  events: [
+    { time: "08:00", type: "transport", icon: "🚕", title: "Didi to Chongqing East Station (重庆东站)", note: "Pre-book Didi the night before! Station is ~40min from hotel by car. Chongqing East opened June 2025 — largest HSR station in Asia. Didi is faster and easier than metro for this trip.", transport: "🚕 Didi ~40min (¥50–70) to Chongqing East Station", mapUrl: gmap(null, "Chongqing East Station 重庆东站"), photoKey: "cqeast_station" },
+    { time: "08:45", type: "transport", icon: "🚂", title: "Catch ~9AM train → Wulong South (38min)", note: "26 trains daily — aim for the 9:00–9:15AM departure. Only 38–47min ride! ~S$12–15. Scan passport at gate, no paper ticket needed. Book on Trip.com or 12306 in advance.", transport: "🚂 Chongqing East → Wulong South · ~38min · ~S$12–15", mapUrl: gmap(null, "Wulong South Station 武隆南站") },
+    { time: "10:00", type: "transport", icon: "🚐", title: "Arrive Wulong South → blue shuttle to Visitor Centre", note: "Take the blue scenic shuttle bus waiting outside the station to Fairy Mountain Visitor Centre (仙女山游客中心) — ~45min. Buy your scenic area entrance tickets here.", transport: "🚐 Blue shuttle bus outside station → Visitor Centre ~45min", mapUrl: gmap(null, "Wulong Fairy Mountain Visitor Centre 仙女山游客中心") },
+    { time: "10:50", type: "explore", icon: "🌉", title: "Three Natural Bridges (天生三桥)", note: "Three massive natural limestone arches — Transformers 4 and Curse of the Golden Flower filmed here! Full trail with elevator included. Allow 2–2.5hrs. Ticket: ¥155 (includes shuttle bus).", mapUrl: gmap(null, "Three Natural Bridges Wulong 天生三桥"), photoKey: "wulong_bridges" },
+    { time: "13:15", type: "food", icon: "🍱", title: "Lunch near Visitor Centre", note: "Restaurants near the Visitor Centre — Wulong fish, lamb rice bowl. Milder spice than Chongqing city.", mapUrl: gmap(null, "Wulong Visitor Centre restaurant 仙女山游客中心"), suggested: true },
+    { time: "14:00", type: "explore", icon: "🏞️", title: "Longshuixia Fissure Gorge (龙水峡地缝)", note: "Dramatic slot canyon — waterfalls, suspension bridges, sheer cliffs. 1–2hr trail. Take sightseeing vehicle from Three Bridges exit. Buggy at end ¥15.", transport: "🚐 Sightseeing vehicle from Three Bridges exit (included)", mapUrl: gmap(null, "Longshuixia Fissure Gorge Wulong 龙水峡地缝"), photoKey: "wulong_gorge" },
+    { time: "15:45", type: "transport", icon: "🚂", title: "Shuttle back to Wulong South → train to Chongqing", note: "Take shuttle back to Wulong South (~45min). Catch a ~4:30–5PM train back — 38min ride! Check return times when booking your outbound ticket.", transport: "🚐 Shuttle to station ~45min → 🚂 Train back ~38min", mapUrl: gmap(null, "Wulong South Station 武隆南站") },
+    { time: "17:30", type: "hotel", icon: "🏨", title: "Back at Chongqing East → Didi to hotel", note: "Didi back to hotel ~40min. Quick freshen up before the 1949 show!", transport: "🚕 Didi ~40min (¥50–70)", mapUrl: gmap(null, "浩廷高空江景酒店解放碑洪崖洞店 Chongqing") },
+    { time: "18:15", type: "food", icon: "🌶️", title: "Quick dinner near hotel", note: "Light meal before heading to the show — grab something near Jiefangbei", mapUrl: gmap("ChIJ1S7X6oY0kzYRIyiS3lG6Abg"), suggested: true },
+    { time: "19:00", type: "transport", icon: "🚕", title: "Didi → 1949 Theatre (Ciqikou area)", transport: "🚕 Didi ~25–30min from hotel (¥35–50)", mapUrl: gmap("ChIJjYJETX8zkzYRzCjjUlnEovE") },
+    { time: "19:30", type: "explore", icon: "🎭", title: "Chongqing 1949 Grand Theatre Show", note: "Show time: 7:30 PM. Book on Trip.com or Klook (¥60–250). English translation device available. ~1.5hrs.", mapUrl: gmap("ChIJjYJETX8zkzYRzCjjUlnEovE"), photoKey: "theatre_1949" },
+    { time: "21:15", type: "transport", icon: "🚕", title: "Didi back to hotel", note: "Head straight back — epic day, well deserved rest!", transport: "🚕 Didi ~25–30min (¥35–50)", mapUrl: gmap(null, "浩廷高空江景酒店解放碑洪崖洞店 Chongqing") },
+  ],
+};
+
 const may17_noGeo = {
   id: "may17", date: "May 17 (Sun)", title: "Ciqikou + Shopping + Final Day",
   subtitle: "Ciqikou → Jiefangbei → Farewell", emoji: "🏯", color: "#f0f9ff", accent: "#0891b2",
@@ -420,6 +448,13 @@ const plans = {
     color: "#7c3aed",
     light: "#f5f3ff",
     days16_17: [may16_noGeo, may17_noGeo],
+  },
+  D: {
+    label: "Plan D — Wulong Karst 🏔️",
+    desc: "May 16: Wulong UNESCO Day Trip + 1949 · May 17: Pokémon + Ciqikou",
+    color: "#15803d",
+    light: "#f0fdf4",
+    days16_17: [may16_wulong, may17_withGeocentric],
   },
 };
 
@@ -576,6 +611,7 @@ export default function Itinerary() {
             "🦀 Li Bai Crab Roe Noodles — go early to avoid long queues",
             "🍽️ Li Yan Ba Guo Court Feast — Klook is cheaper than Trip.com, book in advance",
             "🚕 Plan B: Pre-book Didi for Geocentric Exploration 4 days ahead (¥133.6, 82min each way)",
+            "🏔️ Plan D: Book HSR tickets on Trip.com or 12306 in advance — Chongqing East → Wulong South (~38min, ~S$12–15)",
             "✈️ May 18 flight is 02:35 AM — arrange Didi by 00:30, set multiple alarms!",
           ].map((tip, i) => (
             <div key={i} style={{ fontSize: 13, marginBottom: 6, opacity: 0.88, lineHeight: 1.5 }}>{tip}</div>
