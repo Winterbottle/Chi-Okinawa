@@ -521,13 +521,20 @@ export default function Okinawa() {
                     attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
-                  {visibleRoutes.map(r => (
+                  {visibleRoutes.map(r => (<>
+                    {/* White outline underneath for contrast */}
                     <Polyline
-                      key={r.id}
+                      key={`${r.id}-outline`}
                       positions={r.path}
-                      pathOptions={{ color: r.color, weight: 3.5, opacity: 0.85, dashArray: "8 5" }}
+                      pathOptions={{ color: "white", weight: 8, opacity: 0.9 }}
                     />
-                  ))}
+                    {/* Colored route line on top */}
+                    <Polyline
+                      key={`${r.id}-line`}
+                      positions={r.path}
+                      pathOptions={{ color: r.color, weight: 5, opacity: 1 }}
+                    />
+                  </>))}
                   {visibleCats.map(cat =>
                     cat.places.map((place, i) => (
                       <Marker
