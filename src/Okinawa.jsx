@@ -74,14 +74,14 @@ const BOOKMARKS = [
     id: "attractions", title: "Attractions & Theme Parks", emoji: "🎡",
     color: "#15803d", light: "#f0fdf4", border: "#86efac",
     places: [
-      { name: "Okinawa Churaumi Aquarium",    coord: [26.694, 127.878] },
+      { name: "Okinawa Churaumi Aquarium",      coord: [26.694, 127.878] },
       { name: "DMM Kariyushi Aquarium Okinawa", coord: [26.156, 127.650] },
-      { name: "Junglia Okinawa",              coord: [26.642, 127.974] },
-      { name: "Nago Pineapple Park",          coord: [26.616, 127.970] },
-      { name: "Orion Happy Park",             coord: [26.589, 127.983] },
-      { name: "Ryujin Hot Springs",           coord: [26.228, 127.700] },
-      { name: "PARCO CITY Observation Deck",  coord: [26.289, 127.737] },
-      { name: "ricoland Okinawa",             coord: [26.247, 127.736] },
+      { name: "Junglia Okinawa",                coord: [26.642, 127.974] },
+      { name: "Nago Pineapple Park",            coord: [26.616, 127.970] },
+      { name: "Orion Happy Park",               coord: [26.589, 127.983] },
+      { name: "Ryujin Hot Springs",             coord: [26.228, 127.700] },
+      { name: "PARCO CITY Observation Deck",    coord: [26.289, 127.737] },
+      { name: "ricoland Okinawa",               coord: [26.247, 127.736] },
     ],
   },
   {
@@ -93,6 +93,38 @@ const BOOKMARKS = [
       { name: "Road Station Yanbaru Pineapple Hill Aha",     coord: [26.705, 128.166] },
       { name: "Roadside Station Kyoda",                      coord: [26.552, 127.969] },
       { name: "Ginoza Roadside Station",                     coord: [26.474, 127.952] },
+    ],
+  },
+  {
+    id: "bath", title: "Baths & Showers", emoji: "🛁",
+    color: "#0d9488", light: "#f0fdfa", border: "#99f6e4",
+    places: [
+      { name: "Ryujin Hot Springs (Day Use)",     coord: [26.228, 127.700] },
+      { name: "Terme VILLA Chura-yu (Chatan)",   coord: [26.317, 127.759] },
+      { name: "Rikkarikkayu (Naha)",             coord: [26.213, 127.684] },
+      { name: "Kouri Beach Coin Showers",        coord: [26.695, 128.022] },
+      { name: "Okuma Beach Shower Facilities",   coord: [26.723, 128.143] },
+    ],
+  },
+  {
+    id: "toilet", title: "Public Toilets", emoji: "🚻",
+    color: "#475569", light: "#f8fafc", border: "#cbd5e1",
+    places: [
+      { name: "Naminoue Beach Park Toilet (24hr)",     coord: [26.223, 127.681] },
+      { name: "Cape Zanpa Park Toilet (24hr)",         coord: [26.408, 127.719] },
+      { name: "Emerald Beach / Ocean Expo Park (24hr)", coord: [26.697, 127.868] },
+      { name: "Okuma Beach Park Toilet (24hr)",        coord: [26.724, 128.144] },
+      { name: "Cape Hedo Toilet",                      coord: [26.865, 128.260] },
+    ],
+  },
+  {
+    id: "petrol", title: "Petrol Stations", emoji: "⛽",
+    color: "#dc2626", light: "#fef2f2", border: "#fca5a5",
+    places: [
+      { name: "ENEOS Urasoe (near Asoviva Works)", coord: [26.249, 127.721] },
+      { name: "ENEOS Nago (Route 58)",             coord: [26.597, 127.975] },
+      { name: "Apollostation Nago East",           coord: [26.604, 128.002] },
+      { name: "Last Station before Cape Hedo (Kunigami)", coord: [26.729, 128.151] },
     ],
   },
 ];
@@ -116,13 +148,25 @@ const makeIcon = (emoji, color) =>
   });
 
 export default function Okinawa() {
-  const [activeDay, setActiveDay] = useState("may7");
+  const [activeTab, setActiveTab] = useState("may7");
   const [activeFilter, setActiveFilter] = useState(null);
-  const day = DAYS.find(d => d.id === activeDay);
+  const [rotation, setRotation] = useState(0);
+
+  const day = DAYS.find(d => d.id === activeTab);
 
   const visibleCats = activeFilter
     ? BOOKMARKS.filter(c => c.id === activeFilter)
     : BOOKMARKS;
+
+  const tabBtn = (id, label, isActive) => (
+    <button key={id} onClick={() => setActiveTab(id)} style={{
+      padding: "12px 14px", background: "none", border: "none",
+      borderBottom: isActive ? "3px solid #0891b2" : "3px solid transparent",
+      color: isActive ? "#0891b2" : "#6b7280",
+      fontWeight: isActive ? 700 : 400,
+      cursor: "pointer", fontSize: 12, fontFamily: "inherit", whiteSpace: "nowrap",
+    }}>{label}</button>
+  );
 
   return (
     <div style={{ fontFamily: "'Georgia', serif", background: "#fafaf8", minHeight: "100vh" }}>
@@ -146,162 +190,199 @@ export default function Okinawa() {
         </div>
       </div>
 
-      {/* Day tabs */}
+      {/* Tabs */}
       <div style={{ background: "white", borderBottom: "1px solid #e5e7eb", overflowX: "auto" }}>
         <div style={{ display: "flex", minWidth: "max-content", padding: "0 12px" }}>
-          {DAYS.map(d => (
-            <button key={d.id} onClick={() => setActiveDay(d.id)} style={{
-              padding: "12px 14px", background: "none", border: "none",
-              borderBottom: activeDay === d.id ? "3px solid #0891b2" : "3px solid transparent",
-              color: activeDay === d.id ? "#0891b2" : "#6b7280",
-              fontWeight: activeDay === d.id ? 700 : 400,
-              cursor: "pointer", fontSize: 12, fontFamily: "inherit", whiteSpace: "nowrap",
-            }}>
-              {d.type === "arrive" ? "✈️ " : d.type === "depart" ? "🛫 " : ""}{d.label}
-            </button>
-          ))}
+          {DAYS.map(d =>
+            tabBtn(
+              d.id,
+              `${d.type === "arrive" ? "✈️ " : d.type === "depart" ? "🛫 " : ""}${d.label}`,
+              activeTab === d.id
+            )
+          )}
+          {tabBtn("map", "🗺️ Map & Bookmarks", activeTab === "map")}
         </div>
       </div>
 
       {/* Day content */}
-      <div style={{ maxWidth: 680, margin: "0 auto", padding: "24px 16px 8px" }}>
-        {day.type === "free" ? (
-          <div style={{
-            background: "white", border: "2px dashed #d1d5db", borderRadius: 16,
-            padding: "32px 24px", textAlign: "center", color: "#9ca3af",
-          }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}>🌺</div>
-            <div style={{ fontSize: 14, fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>Itinerary Coming Soon</div>
-            <div style={{ fontSize: 12 }}>Check the bookmarks below for places to explore!</div>
-          </div>
-        ) : (
-          <div style={{
-            background: day.type === "arrive" ? "#f0f9ff" : "#fff7ed",
-            border: `2px solid ${day.type === "arrive" ? "#7dd3fc" : "#fdba74"}`,
-            borderRadius: 16, padding: "18px 20px",
-          }}>
-            <div style={{ fontSize: 24, marginBottom: 6 }}>{day.type === "arrive" ? "🛬" : "🛫"}</div>
-            <div style={{ fontWeight: 700, fontSize: 14, color: day.type === "arrive" ? "#0369a1" : "#c2410c", marginBottom: 4 }}>
-              {day.type === "arrive" ? "Arrival Day" : "Departure Day"}
-            </div>
-            <div style={{ fontSize: 13, color: "#374151", lineHeight: 1.6 }}>{day.note}</div>
-          </div>
-        )}
-      </div>
-
-      {/* ── MAP ── */}
-      <div style={{ maxWidth: 680, margin: "0 auto", padding: "20px 16px 0" }}>
-        <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 10, color: "#111827", textAlign: "center" }}>
-          🗺️ Okinawa Bookmarks
-        </div>
-
-        {/* Category filter pills */}
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "center", marginBottom: 12 }}>
-          <button onClick={() => setActiveFilter(null)} style={{
-            padding: "5px 12px", borderRadius: 20, border: "none",
-            background: !activeFilter ? "#111827" : "#e5e7eb",
-            color: !activeFilter ? "white" : "#374151",
-            fontSize: 12, cursor: "pointer", fontFamily: "inherit", fontWeight: !activeFilter ? 700 : 400,
-          }}>All</button>
-          {BOOKMARKS.map(cat => (
-            <button key={cat.id} onClick={() => setActiveFilter(activeFilter === cat.id ? null : cat.id)} style={{
-              padding: "5px 12px", borderRadius: 20, border: "none",
-              background: activeFilter === cat.id ? cat.color : cat.light,
-              color: activeFilter === cat.id ? "white" : cat.color,
-              fontSize: 12, cursor: "pointer", fontFamily: "inherit",
-              fontWeight: activeFilter === cat.id ? 700 : 400,
-              border: `1px solid ${cat.border}`,
-            }}>{cat.emoji} {cat.title}</button>
-          ))}
-        </div>
-
-        {/* Leaflet Map */}
-        <div style={{ borderRadius: 16, overflow: "hidden", border: "1.5px solid #d1d5db", height: 700 }}>
-          <MapContainer
-            center={[26.49, 127.97]}
-            zoom={9}
-            style={{ height: "100%", width: "100%" }}
-            scrollWheelZoom={true}
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {visibleCats.map(cat =>
-              cat.places.map((place, i) => (
-                <Marker
-                  key={`${cat.id}-${i}`}
-                  position={place.coord}
-                  icon={makeIcon(cat.emoji, cat.color)}
-                >
-                  <Popup>
-                    <div style={{ minWidth: 140 }}>
-                      <div style={{
-                        background: cat.color, color: "white",
-                        margin: "-7px -7px 8px", padding: "6px 10px",
-                        borderRadius: "4px 4px 0 0", fontSize: 12, fontWeight: 700,
-                      }}>{cat.emoji} {cat.title}</div>
-                      <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 6 }}>{place.name}</div>
-                      <a href={gmaps(place.name)} target="_blank" rel="noopener noreferrer"
-                        style={{ fontSize: 11, color: "#16a34a", textDecoration: "none" }}>
-                        📍 Open in Google Maps
-                      </a>
-                    </div>
-                  </Popup>
-                </Marker>
-              ))
-            )}
-          </MapContainer>
-        </div>
-      </div>
-
-      {/* Bookmarks list */}
-      <div style={{ maxWidth: 680, margin: "0 auto", padding: "16px 16px 48px" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {visibleCats.map(cat => (
-            <div key={cat.id} style={{
-              background: cat.light, border: `1.5px solid ${cat.border}`,
-              borderRadius: 14, overflow: "hidden",
+      {activeTab !== "map" && day && (
+        <div style={{ maxWidth: 680, margin: "0 auto", padding: "24px 16px 48px" }}>
+          {day.type === "free" ? (
+            <div style={{
+              background: "white", border: "2px dashed #d1d5db", borderRadius: 16,
+              padding: "32px 24px", textAlign: "center", color: "#9ca3af",
             }}>
-              <div style={{
-                background: cat.color, color: "white",
-                padding: "10px 16px", display: "flex", alignItems: "center", gap: 8,
-                fontWeight: 700, fontSize: 14,
-              }}>
-                <span style={{ fontSize: 16 }}>{cat.emoji}</span>
-                {cat.title}
-                <span style={{ marginLeft: "auto", fontSize: 11, opacity: 0.75, fontWeight: 400 }}>
-                  {cat.places.length} places
-                </span>
+              <div style={{ fontSize: 32, marginBottom: 8 }}>🌺</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>Itinerary Coming Soon</div>
+              <div style={{ fontSize: 12 }}>Switch to the Map & Bookmarks tab to explore places!</div>
+            </div>
+          ) : (
+            <div style={{
+              background: day.type === "arrive" ? "#f0f9ff" : "#fff7ed",
+              border: `2px solid ${day.type === "arrive" ? "#7dd3fc" : "#fdba74"}`,
+              borderRadius: 16, padding: "18px 20px",
+            }}>
+              <div style={{ fontSize: 24, marginBottom: 6 }}>{day.type === "arrive" ? "🛬" : "🛫"}</div>
+              <div style={{ fontWeight: 700, fontSize: 14, color: day.type === "arrive" ? "#0369a1" : "#c2410c", marginBottom: 4 }}>
+                {day.type === "arrive" ? "Arrival Day" : "Departure Day"}
               </div>
-              <div style={{ padding: "10px 10px", display: "flex", flexDirection: "column", gap: 5 }}>
-                {cat.places.map((place, i) => (
-                  <div key={i} style={{
-                    display: "flex", alignItems: "center", justifyContent: "space-between",
-                    background: "white", borderRadius: 8, padding: "7px 12px",
-                    border: `1px solid ${cat.border}`,
-                  }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{
-                        color: "white", background: cat.color, fontWeight: 700, fontSize: 11,
-                        minWidth: 20, height: 20, borderRadius: 10,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                      }}>{i + 1}</span>
-                      <span style={{ fontSize: 13 }}>{place.name}</span>
-                    </div>
-                    <a href={gmaps(place.name)} target="_blank" rel="noopener noreferrer" style={{
-                      display: "inline-flex", alignItems: "center", gap: 3,
-                      fontSize: 11, color: "#16a34a", background: "#f0fdf4",
-                      padding: "3px 8px", borderRadius: 6, textDecoration: "none",
-                      border: "1px solid #bbf7d0", whiteSpace: "nowrap", flexShrink: 0,
-                    }}>📍 Maps</a>
-                  </div>
-                ))}
+              <div style={{ fontSize: 13, color: "#374151", lineHeight: 1.6 }}>{day.note}</div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Map & Bookmarks tab */}
+      {activeTab === "map" && (
+        <>
+          <div style={{ maxWidth: 680, margin: "0 auto", padding: "20px 16px 0" }}>
+            <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 10, color: "#111827", textAlign: "center" }}>
+              🗺️ Okinawa Bookmarks
+            </div>
+
+            {/* Category filter pills */}
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "center", marginBottom: 12 }}>
+              <button onClick={() => setActiveFilter(null)} style={{
+                padding: "5px 12px", borderRadius: 20, border: "none",
+                background: !activeFilter ? "#111827" : "#e5e7eb",
+                color: !activeFilter ? "white" : "#374151",
+                fontSize: 12, cursor: "pointer", fontFamily: "inherit", fontWeight: !activeFilter ? 700 : 400,
+              }}>All</button>
+              {BOOKMARKS.map(cat => (
+                <button key={cat.id} onClick={() => setActiveFilter(activeFilter === cat.id ? null : cat.id)} style={{
+                  padding: "5px 12px", borderRadius: 20, border: "none",
+                  background: activeFilter === cat.id ? cat.color : cat.light,
+                  color: activeFilter === cat.id ? "white" : cat.color,
+                  fontSize: 12, cursor: "pointer", fontFamily: "inherit",
+                  fontWeight: activeFilter === cat.id ? 700 : 400,
+                  border: `1px solid ${cat.border}`,
+                }}>{cat.emoji} {cat.title}</button>
+              ))}
+            </div>
+
+            {/* Rotate controls */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 10 }}>
+              <button
+                onClick={() => setRotation(r => (r - 90 + 360) % 360)}
+                style={{
+                  padding: "6px 16px", borderRadius: 20, border: "1.5px solid #d1d5db",
+                  background: "white", cursor: "pointer", fontSize: 14, fontFamily: "inherit",
+                  display: "flex", alignItems: "center", gap: 4,
+                }}>↺ Left</button>
+              <span style={{ fontSize: 12, color: "#6b7280", minWidth: 36, textAlign: "center" }}>{rotation}°</span>
+              <button
+                onClick={() => setRotation(r => (r + 90) % 360)}
+                style={{
+                  padding: "6px 16px", borderRadius: 20, border: "1.5px solid #d1d5db",
+                  background: "white", cursor: "pointer", fontSize: 14, fontFamily: "inherit",
+                  display: "flex", alignItems: "center", gap: 4,
+                }}>↻ Right</button>
+              {rotation !== 0 && (
+                <button
+                  onClick={() => setRotation(0)}
+                  style={{
+                    padding: "6px 12px", borderRadius: 20, border: "1.5px solid #d1d5db",
+                    background: "white", cursor: "pointer", fontSize: 11, color: "#6b7280", fontFamily: "inherit",
+                  }}>Reset</button>
+              )}
+            </div>
+
+            {/* Leaflet Map */}
+            <div style={{ borderRadius: 16, overflow: "hidden", border: "1.5px solid #d1d5db", height: 700 }}>
+              <div style={{
+                width: "100%", height: "100%",
+                transform: `rotate(${rotation}deg)`,
+                transformOrigin: "center center",
+                transition: "transform 0.4s ease",
+              }}>
+                <MapContainer
+                  center={[26.49, 127.97]}
+                  zoom={9}
+                  style={{ height: "100%", width: "100%" }}
+                  scrollWheelZoom={true}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  {visibleCats.map(cat =>
+                    cat.places.map((place, i) => (
+                      <Marker
+                        key={`${cat.id}-${i}`}
+                        position={place.coord}
+                        icon={makeIcon(cat.emoji, cat.color)}
+                      >
+                        <Popup>
+                          <div style={{ minWidth: 140 }}>
+                            <div style={{
+                              background: cat.color, color: "white",
+                              margin: "-7px -7px 8px", padding: "6px 10px",
+                              borderRadius: "4px 4px 0 0", fontSize: 12, fontWeight: 700,
+                            }}>{cat.emoji} {cat.title}</div>
+                            <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 6 }}>{place.name}</div>
+                            <a href={gmaps(place.name)} target="_blank" rel="noopener noreferrer"
+                              style={{ fontSize: 11, color: "#16a34a", textDecoration: "none" }}>
+                              📍 Open in Google Maps
+                            </a>
+                          </div>
+                        </Popup>
+                      </Marker>
+                    ))
+                  )}
+                </MapContainer>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+
+          {/* Bookmarks list */}
+          <div style={{ maxWidth: 680, margin: "0 auto", padding: "16px 16px 48px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {visibleCats.map(cat => (
+                <div key={cat.id} style={{
+                  background: cat.light, border: `1.5px solid ${cat.border}`,
+                  borderRadius: 14, overflow: "hidden",
+                }}>
+                  <div style={{
+                    background: cat.color, color: "white",
+                    padding: "10px 16px", display: "flex", alignItems: "center", gap: 8,
+                    fontWeight: 700, fontSize: 14,
+                  }}>
+                    <span style={{ fontSize: 16 }}>{cat.emoji}</span>
+                    {cat.title}
+                    <span style={{ marginLeft: "auto", fontSize: 11, opacity: 0.75, fontWeight: 400 }}>
+                      {cat.places.length} places
+                    </span>
+                  </div>
+                  <div style={{ padding: "10px 10px", display: "flex", flexDirection: "column", gap: 5 }}>
+                    {cat.places.map((place, i) => (
+                      <div key={i} style={{
+                        display: "flex", alignItems: "center", justifyContent: "space-between",
+                        background: "white", borderRadius: 8, padding: "7px 12px",
+                        border: `1px solid ${cat.border}`,
+                      }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <span style={{
+                            color: "white", background: cat.color, fontWeight: 700, fontSize: 11,
+                            minWidth: 20, height: 20, borderRadius: 10,
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                          }}>{i + 1}</span>
+                          <span style={{ fontSize: 13 }}>{place.name}</span>
+                        </div>
+                        <a href={gmaps(place.name)} target="_blank" rel="noopener noreferrer" style={{
+                          display: "inline-flex", alignItems: "center", gap: 3,
+                          fontSize: 11, color: "#16a34a", background: "#f0fdf4",
+                          padding: "3px 8px", borderRadius: 6, textDecoration: "none",
+                          border: "1px solid #bbf7d0", whiteSpace: "nowrap", flexShrink: 0,
+                        }}>📍 Maps</a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
