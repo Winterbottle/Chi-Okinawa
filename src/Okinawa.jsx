@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -79,7 +79,7 @@ const BOOKMARKS = [
       { name: "Junglia Okinawa",                coord: [26.642, 127.974] },
       { name: "Nago Pineapple Park",            coord: [26.616, 127.970] },
       { name: "Orion Happy Park",               coord: [26.589, 127.983] },
-      { name: "Ryujin Hot Springs",             coord: [26.228, 127.700] },
+      { name: "Ryujin Hot Springs",             coord: [26.193, 127.669] },
       { name: "PARCO CITY Observation Deck",    coord: [26.289, 127.737] },
       { name: "ricoland Okinawa",               coord: [26.247, 127.736] },
     ],
@@ -99,43 +99,175 @@ const BOOKMARKS = [
     id: "bath", title: "Baths & Showers", emoji: "🛁",
     color: "#0d9488", light: "#f0fdfa", border: "#99f6e4",
     places: [
-      { name: "Ryujin Hot Springs (Day Use)",     coord: [26.228, 127.700] },
-      { name: "Terme VILLA Chura-yu (Chatan)",   coord: [26.317, 127.759] },
-      { name: "Rikkarikkayu (Naha)",             coord: [26.213, 127.684] },
-      { name: "Kouri Beach Coin Showers",        coord: [26.695, 128.022] },
-      { name: "Okuma Beach Shower Facilities",   coord: [26.723, 128.143] },
+      { name: "Ryujin Hot Springs (Day Use)",    coord: [26.193, 127.669] },
+      { name: "Terme VILLA Chura-yu (Chatan)",  coord: [26.317, 127.759] },
+      { name: "Rikkarikkayu (Naha)",            coord: [26.213, 127.684] },
+      { name: "Kouri Beach Coin Showers",       coord: [26.695, 128.022] },
+      { name: "Okuma Beach Shower Facilities",  coord: [26.729, 128.134] },
     ],
   },
   {
     id: "toilet", title: "Public Toilets", emoji: "🚻",
     color: "#475569", light: "#f8fafc", border: "#cbd5e1",
     places: [
-      { name: "Naminoue Beach Park Toilet (24hr)",     coord: [26.223, 127.681] },
-      { name: "Cape Zanpa Park Toilet (24hr)",         coord: [26.408, 127.719] },
-      { name: "Emerald Beach / Ocean Expo Park (24hr)", coord: [26.697, 127.868] },
-      { name: "Okuma Beach Park Toilet (24hr)",        coord: [26.724, 128.144] },
-      { name: "Cape Hedo Toilet",                      coord: [26.865, 128.260] },
+      { name: "Naminoue Beach Park Toilet (24hr)",      coord: [26.223, 127.681] },
+      { name: "Cape Zanpa Park Toilet (24hr)",          coord: [26.408, 127.719] },
+      { name: "Emerald Beach / Ocean Expo Park (24hr)", coord: [26.697, 127.867] },
+      { name: "Okuma Beach Park Toilet (24hr)",         coord: [26.729, 128.135] },
+      { name: "Cape Hedo Toilet",                       coord: [26.865, 128.260] },
     ],
   },
   {
     id: "petrol", title: "Petrol Stations", emoji: "⛽",
     color: "#dc2626", light: "#fef2f2", border: "#fca5a5",
     places: [
-      { name: "ENEOS Urasoe (near Asoviva Works)", coord: [26.249, 127.721] },
-      { name: "ENEOS Nago (Route 58)",             coord: [26.597, 127.975] },
-      { name: "Apollostation Nago East",           coord: [26.604, 128.002] },
+      { name: "ENEOS Urasoe (near Asoviva Works)",       coord: [26.249, 127.721] },
+      { name: "ENEOS Nago (Route 58)",                   coord: [26.597, 127.975] },
       { name: "Last Station before Cape Hedo (Kunigami)", coord: [26.729, 128.151] },
+    ],
+  },
+  {
+    id: "campsite", title: "Campsites", emoji: "⛺",
+    color: "#4d7c0f", light: "#f7fee7", border: "#bef264",
+    places: [
+      { name: "Yagaji Beach Campsite (Nago) 🚿🚻",         coord: [26.659, 128.015] },
+      { name: "Hiji Waterfall Campsite (Kunigami) 🚿🚻",   coord: [26.719, 128.180] },
+      { name: "Kunigami Forest Park Campsite 🚿🚻",        coord: [26.789, 128.205] },
+      { name: "Tonokiya Camp (Ogimi) 🚿🚻",               coord: [26.715, 128.088] },
+      { name: "Okuma Beach Campsite (Kunigami) 🚿🚻",     coord: [26.729, 128.134] },
+      { name: "Okinawa Sports Park Auto Campjo 🚿🚻",     coord: [26.357, 127.808] },
     ],
   },
 ];
 
 const DAYS = [
-  { id: "may7",  label: "May 7 (Thu)",  type: "arrive",  note: "Arrive Okinawa ~08:00. Pick up campervan at Asoviva Works 09:00." },
-  { id: "may8",  label: "May 8 (Fri)",  type: "free",    note: null },
-  { id: "may9",  label: "May 9 (Sat)",  type: "free",    note: null },
-  { id: "may10", label: "May 10 (Sun)", type: "free",    note: null },
-  { id: "may11", label: "May 11 (Mon)", type: "free",    note: null },
-  { id: "may12", label: "May 12 (Tue)", type: "depart",  note: "Return campervan to Asoviva Works by 13:30 → Naha Airport → depart 15:00 Spring Airlines 9C6978 → Shanghai 16:35." },
+  {
+    id: "may7", label: "May 7 (Thu)", type: "arrive",
+    headline: "Arrival + South Okinawa Loop", color: "#0369a1",
+    drive: "Asoviva Works → Naha → Itoman → Cape Chinen → camp",
+    schedule: [
+      { time: "08:00", icon: "✈️", activity: "Land at Naha Airport" },
+      { time: "09:00", icon: "🚐", activity: "Pick up campervan @ Asoviva Works (Urasoe)" },
+      { time: "10:30", icon: "🛍️", activity: "Naha — Tsukumo / Surugaya / 2nd LIFE (Kokusai Dori area)" },
+      { time: "12:30", icon: "🍜", activity: "Lunch @ Miyazato Soba (Itoman)" },
+      { time: "14:00", icon: "🐟", activity: "Itoman Fishing Cooperative Fish Center" },
+      { time: "15:30", icon: "🕊️", activity: "Peace Memorial Park" },
+      { time: "17:00", icon: "🌅", activity: "Cape Chinen Park (sunset views over Pacific)" },
+      { time: "19:00", icon: "🌺", activity: "Okinawa World (Gyokusendo Cave area)" },
+      { time: "21:00", icon: "⛺", activity: "Camp @ Okinawa Sports Park Auto Campjo 🚿🚻" },
+    ],
+  },
+  {
+    id: "may8", label: "May 8 (Fri)", type: "free",
+    headline: "Blue Cave Diving + Chatan", color: "#0891b2",
+    drive: "Camp → Cape Maeda (Blue Cave) → Chatan → AEON Rycom",
+    schedule: [
+      { time: "08:30", icon: "🚐", activity: "Drive north to Cape Maeda (~45 min from camp)" },
+      { time: "10:00", icon: "🤿", activity: "DIVING — Blue Cave at Cape Maeda ⭐ (book in advance!)" },
+      { time: "13:00", icon: "☕", activity: "Lunch & coffee near Cape Maeda / Onna village" },
+      { time: "14:30", icon: "🛁", activity: "Terme VILLA Chura-yu, Chatan — shower & soak" },
+      { time: "16:00", icon: "☕", activity: "Zhyvago Coffee Roastery (American Village)" },
+      { time: "17:30", icon: "🛍️", activity: "AEON Mall Rycom — Pokemon Center, Modeler's Core" },
+      { time: "19:30", icon: "🍕", activity: "Dinner @ Pizzeria da Enzo or Hamanoya Restaurant" },
+      { time: "21:30", icon: "⛺", activity: "Camp @ Yagaji Beach Campsite 🚿🚻" },
+    ],
+  },
+  {
+    id: "may9", label: "May 9 (Sat)", type: "free",
+    headline: "Nago + Motobu + Churaumi", color: "#15803d",
+    drive: "Yagaji → Nago → Motobu Peninsula → Churaumi → camp north",
+    schedule: [
+      { time: "09:00", icon: "🍍", activity: "Nago Pineapple Park" },
+      { time: "10:30", icon: "🍺", activity: "Orion Happy Park — brewery tour + tasting" },
+      { time: "12:00", icon: "🍜", activity: "Lunch @ Umi-to-Mugi-to (noodles, northern Okinawa)" },
+      { time: "13:30", icon: "🐟", activity: "Okinawa Churaumi Aquarium + Emerald Beach (free)" },
+      { time: "16:30", icon: "🌿", activity: "Bise-Fukugi Tree Road — walk through ancient trees" },
+      { time: "18:00", icon: "🎡", activity: "Junglia Okinawa (optional — book tickets ahead)" },
+      { time: "20:00", icon: "⛺", activity: "Camp @ Okuma Beach Campsite 🚿🚻 (Kunigami)" },
+    ],
+  },
+  {
+    id: "may10", label: "May 10 (Sun)", type: "free",
+    headline: "Cape Hedo + Yanbaru East Coast", color: "#7c3aed",
+    drive: "Okuma → Cape Hedo → East coast south (Route 329) → camp",
+    schedule: [
+      { time: "08:00", icon: "🚐", activity: "Drive to Cape Hedo (~1 hr from Okuma)" },
+      { time: "09:00", icon: "🌊", activity: "Cape Hedo — northernmost tip of Okinawa ⭐" },
+      { time: "10:30", icon: "🏔️", activity: "Kayauchi Banta — dramatic 70m cliffs" },
+      { time: "11:30", icon: "🛣️", activity: "Yuiyui Kunigami roadside station — lunch & local goods" },
+      { time: "13:00", icon: "🐦", activity: "Yanbaru Kuina Ecological Exhibition Center" },
+      { time: "14:30", icon: "💦", activity: "Hiji Waterfall hike" },
+      { time: "16:30", icon: "🌿", activity: "Higashi-son Fureai Hirugi Park (mangroves)" },
+      { time: "18:30", icon: "🍽️", activity: "Dinner @ Nagumagai or Sunrise Higashi" },
+      { time: "21:00", icon: "⛺", activity: "Camp @ Hiji Waterfall Campsite or Tonokiya 🚿🚻" },
+    ],
+  },
+  {
+    id: "may11", label: "May 11 (Mon)", type: "free",
+    headline: "East Coast South + Last Naha", color: "#b45309",
+    drive: "Camp → Ginoza → Katsuren → Naha (south on Route 329/13)",
+    schedule: [
+      { time: "09:00", icon: "🛣️", activity: "Ogimi Roadside Station & Ginoza Roadside Station (coffee stop)" },
+      { time: "10:30", icon: "🏯", activity: "Katsuren Castle Ruins (UNESCO World Heritage)" },
+      { time: "12:00", icon: "🍜", activity: "Lunch @ Takaesu Soba (central Okinawa)" },
+      { time: "13:30", icon: "🎡", activity: "DMM Kariyushi Aquarium (Toyosaki)" },
+      { time: "15:30", icon: "🛍️", activity: "Kokusai Dori & Tsuboya Yachimun Street (last Naha browse)" },
+      { time: "17:30", icon: "🗼", activity: "PARCO CITY Observation Deck — sunset over Naha" },
+      { time: "19:00", icon: "🍶", activity: "Dinner @ Urizun (awamori & Okinawan cuisine)" },
+      { time: "21:00", icon: "⛺", activity: "Camp near Urasoe / Asoviva Works area 🚿🚻" },
+    ],
+  },
+  {
+    id: "may12", label: "May 12 (Tue)", type: "depart",
+    headline: "Departure Day", color: "#c2410c",
+    drive: "Camp → Asoviva Works → Naha Airport",
+    schedule: [
+      { time: "09:00", icon: "☕", activity: "Morning coffee & last browse near Naha" },
+      { time: "11:00", icon: "🛍️", activity: "Last-minute shopping — Bookcafe Okinawa Rail or ricoland" },
+      { time: "12:30", icon: "🍜", activity: "Final Okinawa lunch (soba or nearby spot)" },
+      { time: "13:00", icon: "🚐", activity: "Return campervan to Asoviva Works" },
+      { time: "13:30", icon: "⏰", activity: "Deadline — van returned ✅" },
+      { time: "14:00", icon: "🛫", activity: "Head to Naha Airport" },
+      { time: "15:00", icon: "✈️", activity: "Spring Airlines 9C6978 departs Naha → Shanghai" },
+      { time: "16:35", icon: "🏙️", activity: "Arrive Shanghai Pudong ✅" },
+    ],
+  },
+];
+
+// Clockwise driving circuit: Urasoe → South → West coast north → Cape Hedo → East coast south → Urasoe
+const ROUTE_PATH = [
+  [26.249, 127.721], // Asoviva Works (start)
+  [26.217, 127.687], // Naha
+  [26.158, 127.673], // Naha south
+  [26.117, 127.665], // Itoman
+  [26.097, 127.725], // Peace Memorial Park
+  [26.153, 127.795], // Cape Chinen
+  [26.171, 127.742], // Okinawa World
+  [26.217, 127.687], // back through Naha
+  [26.249, 127.721], // Urasoe
+  [26.317, 127.759], // Chatan / Blue Cave day
+  [26.408, 127.719], // Cape Zanpa
+  [26.444, 127.763], // Cape Maeda / Blue Cave ⭐
+  [26.490, 127.840], // Onna village
+  [26.552, 127.969], // Roadside Station Kyoda
+  [26.591, 127.978], // Nago
+  [26.694, 127.878], // Churaumi Aquarium (Motobu)
+  [26.704, 127.881], // Bise Fukugi
+  [26.680, 127.930], // Nakijin
+  [26.729, 128.134], // Okuma (northwest)
+  [26.800, 128.200], // northwest Kunigami coast
+  [26.867, 128.261], // Cape Hedo ⭐
+  [26.854, 128.249], // Kayauchi Banta
+  [26.789, 128.205], // Kunigami forest
+  [26.732, 128.169], // Yuiyui Kunigami
+  [26.719, 128.180], // Hiji Waterfall
+  [26.715, 128.088], // Tonokiya / Ogimi
+  [26.699, 128.170], // Higashi-son
+  [26.549, 128.076], // Kanucha Beach area
+  [26.474, 127.952], // Ginoza
+  [26.331, 127.879], // Katsuren
+  [26.308, 127.797], // AEON Rycom / Uruma
+  [26.249, 127.721], // back to Asoviva Works
 ];
 
 const makeIcon = (emoji, color) =>
@@ -150,7 +282,6 @@ const makeIcon = (emoji, color) =>
 export default function Okinawa() {
   const [activeTab, setActiveTab] = useState("may7");
   const [activeFilter, setActiveFilter] = useState(null);
-  const [rotation, setRotation] = useState(0);
 
   const day = DAYS.find(d => d.id === activeTab);
 
@@ -207,28 +338,46 @@ export default function Okinawa() {
       {/* Day content */}
       {activeTab !== "map" && day && (
         <div style={{ maxWidth: 680, margin: "0 auto", padding: "24px 16px 48px" }}>
-          {day.type === "free" ? (
-            <div style={{
-              background: "white", border: "2px dashed #d1d5db", borderRadius: 16,
-              padding: "32px 24px", textAlign: "center", color: "#9ca3af",
-            }}>
-              <div style={{ fontSize: 32, marginBottom: 8 }}>🌺</div>
-              <div style={{ fontSize: 14, fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>Itinerary Coming Soon</div>
-              <div style={{ fontSize: 12 }}>Switch to the Map & Bookmarks tab to explore places!</div>
+          {/* Day header */}
+          <div style={{
+            background: day.color, color: "white",
+            borderRadius: 14, padding: "16px 20px", marginBottom: 16,
+          }}>
+            <div style={{ fontSize: 11, opacity: 0.75, textTransform: "uppercase", letterSpacing: 2, marginBottom: 4 }}>
+              {day.label}
             </div>
-          ) : (
-            <div style={{
-              background: day.type === "arrive" ? "#f0f9ff" : "#fff7ed",
-              border: `2px solid ${day.type === "arrive" ? "#7dd3fc" : "#fdba74"}`,
-              borderRadius: 16, padding: "18px 20px",
-            }}>
-              <div style={{ fontSize: 24, marginBottom: 6 }}>{day.type === "arrive" ? "🛬" : "🛫"}</div>
-              <div style={{ fontWeight: 700, fontSize: 14, color: day.type === "arrive" ? "#0369a1" : "#c2410c", marginBottom: 4 }}>
-                {day.type === "arrive" ? "Arrival Day" : "Departure Day"}
+            <div style={{ fontWeight: 700, fontSize: 17, marginBottom: 6 }}>{day.headline}</div>
+            <div style={{ fontSize: 12, opacity: 0.85 }}>🚐 {day.drive}</div>
+          </div>
+
+          {/* Timeline */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+            {day.schedule.map((item, i) => (
+              <div key={i} style={{ display: "flex", gap: 0, position: "relative" }}>
+                {/* Line */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 40, flexShrink: 0 }}>
+                  <div style={{
+                    width: 32, height: 32, borderRadius: "50%",
+                    background: "white", border: `2px solid ${day.color}`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 14, zIndex: 1, flexShrink: 0,
+                  }}>{item.icon}</div>
+                  {i < day.schedule.length - 1 && (
+                    <div style={{ width: 2, flex: 1, minHeight: 12, background: `${day.color}30` }} />
+                  )}
+                </div>
+                {/* Content */}
+                <div style={{
+                  flex: 1, background: "white", borderRadius: 10,
+                  padding: "8px 12px", marginBottom: 6, marginLeft: 8,
+                  border: "1px solid #e5e7eb",
+                }}>
+                  <div style={{ fontSize: 10, color: day.color, fontWeight: 700, marginBottom: 2 }}>{item.time}</div>
+                  <div style={{ fontSize: 13, color: "#111827" }}>{item.activity}</div>
+                </div>
               </div>
-              <div style={{ fontSize: 13, color: "#374151", lineHeight: 1.6 }}>{day.note}</div>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
       )}
 
@@ -260,41 +409,8 @@ export default function Okinawa() {
               ))}
             </div>
 
-            {/* Rotate controls */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 10 }}>
-              <button
-                onClick={() => setRotation(r => (r - 90 + 360) % 360)}
-                style={{
-                  padding: "6px 16px", borderRadius: 20, border: "1.5px solid #d1d5db",
-                  background: "white", cursor: "pointer", fontSize: 14, fontFamily: "inherit",
-                  display: "flex", alignItems: "center", gap: 4,
-                }}>↺ Left</button>
-              <span style={{ fontSize: 12, color: "#6b7280", minWidth: 36, textAlign: "center" }}>{rotation}°</span>
-              <button
-                onClick={() => setRotation(r => (r + 90) % 360)}
-                style={{
-                  padding: "6px 16px", borderRadius: 20, border: "1.5px solid #d1d5db",
-                  background: "white", cursor: "pointer", fontSize: 14, fontFamily: "inherit",
-                  display: "flex", alignItems: "center", gap: 4,
-                }}>↻ Right</button>
-              {rotation !== 0 && (
-                <button
-                  onClick={() => setRotation(0)}
-                  style={{
-                    padding: "6px 12px", borderRadius: 20, border: "1.5px solid #d1d5db",
-                    background: "white", cursor: "pointer", fontSize: 11, color: "#6b7280", fontFamily: "inherit",
-                  }}>Reset</button>
-              )}
-            </div>
-
             {/* Leaflet Map */}
             <div style={{ borderRadius: 16, overflow: "hidden", border: "1.5px solid #d1d5db", height: 700 }}>
-              <div style={{
-                width: "100%", height: "100%",
-                transform: `rotate(${rotation}deg)`,
-                transformOrigin: "center center",
-                transition: "transform 0.4s ease",
-              }}>
                 <MapContainer
                   center={[26.49, 127.97]}
                   zoom={9}
@@ -304,6 +420,10 @@ export default function Okinawa() {
                   <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <Polyline
+                    positions={ROUTE_PATH}
+                    pathOptions={{ color: "#0891b2", weight: 3, opacity: 0.75, dashArray: "8 5" }}
                   />
                   {visibleCats.map(cat =>
                     cat.places.map((place, i) => (
@@ -330,7 +450,6 @@ export default function Okinawa() {
                     ))
                   )}
                 </MapContainer>
-              </div>
             </div>
           </div>
 
