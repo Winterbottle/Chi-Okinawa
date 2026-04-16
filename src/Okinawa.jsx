@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -141,6 +141,131 @@ const BOOKMARKS = [
 ];
 
 
+const DAYS = [
+  {
+    id: "may7", label: "May 7 (Thu)", type: "arrive",
+    headline: "Arrival + Blue Cave + Tree Road", color: "#0369a1",
+    drive: "Naha Airport → Asoviva Works → AEON Rycom → Blue Cave → Bise Tree Road → Ogimi",
+    schedule: [
+      { time: "08:35", icon: "🛬", activity: "Land at Naha Airport (International Terminal)" },
+      { time: "09:30", icon: "🚗", activity: "Pick up rental Leaf car at airport" },
+      { time: "10:00", icon: "🚐", activity: "Asoviva Works — collect campervan" },
+      { time: "11:30", icon: "🛍️", activity: "AEON Mall Okinawa Rycom" },
+      { time: "13:00", icon: "🍜", activity: "Lunch" },
+      { time: "15:00", icon: "🤿", activity: "Blue Cave — Chigunu Beach / Cape Maeda ⭐ (book in advance!)" },
+      { time: "17:30", icon: "🌿", activity: "Bise-Fukugi Tree Road" },
+      { time: "19:00", icon: "🛣️", activity: "Ogimi Roadside Station Yambaru" },
+      { time: "21:00", icon: "⛺", activity: "Camp (north Okinawa)" },
+    ],
+  },
+  {
+    id: "may8", label: "May 8 (Fri)", type: "free",
+    headline: "Bookcafe + Cape Hedo + Pineapple Park", color: "#0891b2",
+    drive: "Camp → Bookcafe → Cape Hedo → Lighthouse → Pineapple Park → Sendanmura → Ginoza",
+    schedule: [
+      { time: "09:00", icon: "📚", activity: "Bookcafe Okinawa Rail" },
+      { time: "10:30", icon: "🌊", activity: "Cape Hedo — northernmost tip of Okinawa ⭐" },
+      { time: "11:30", icon: "🏠", activity: "Cape Hedo Lighthouse" },
+      { time: "13:00", icon: "🍍", activity: "Nago Pineapple Park (Pineapple Hill)" },
+      { time: "14:30", icon: "🍽️", activity: "Eat @ Sendanmura" },
+      { time: "16:30", icon: "🛣️", activity: "Ginoza Roadside Station" },
+      { time: "21:00", icon: "⛺", activity: "Camp" },
+    ],
+  },
+  {
+    id: "may9", label: "May 9 (Sat)", type: "free",
+    headline: "Sunrise + Salt Factory + Katsuren + Cape Chinen", color: "#15803d",
+    drive: "Camp → Sunrise Higashi → Salt Factory → Katsuren Castle → AEON → Cape Chinen → Hot Spring",
+    schedule: [
+      { time: "07:00", icon: "🌅", activity: "Sunrise Higashi — watch the sunrise" },
+      { time: "09:00", icon: "🧂", activity: "Nuchima-su Salt Factory" },
+      { time: "11:00", icon: "🏯", activity: "Katsuren Castle Ruins (UNESCO World Heritage)" },
+      { time: "12:30", icon: "☕", activity: "Cafe near castle" },
+      { time: "14:00", icon: "🛍️", activity: "AEON Mall Okinawa Rycom" },
+      { time: "15:30", icon: "🍜", activity: "Lunch" },
+      { time: "17:00", icon: "🌊", activity: "Cape Chinen Park" },
+      { time: "19:00", icon: "♨️", activity: "Hot Spring (Ryujin Hot Springs)" },
+    ],
+  },
+  {
+    id: "may10", label: "May 10 (Sun)", type: "free",
+    headline: "AEON + Okinawa World + Tsukumo Dinner", color: "#7c3aed",
+    drive: "Camp → AEON Mall → Okinawa World → Tsukumo (Naha)",
+    schedule: [
+      { time: "10:00", icon: "🛍️", activity: "AEON Mall Okinawa Rycom" },
+      { time: "13:00", icon: "🌺", activity: "Okinawa World (Gyokusendo Cave)" },
+      { time: "16:00", icon: "🏪", activity: "Kokusai Dori / Naha browse" },
+      { time: "19:00", icon: "🎮", activity: "Dinner @ Tsukumo (Naha)" },
+    ],
+  },
+  {
+    id: "may11", label: "May 11 (Mon)", type: "depart",
+    headline: "Departure → Shanghai", color: "#c2410c",
+    drive: "Camp → Asoviva Works (return van by 11am) → Naha Airport",
+    schedule: [
+      { time: "09:00", icon: "☕", activity: "Morning — last eats in Okinawa" },
+      { time: "11:00", icon: "🚐", activity: "Return campervan to Asoviva Works ✅" },
+      { time: "12:00", icon: "🛫", activity: "Head to Naha Airport — depart Okinawa" },
+      { time: "~eve", icon: "🏙️", activity: "Arrive Shanghai — check in Shanghai Bund Hotel" },
+      { time: "~eve", icon: "🦀", activity: "Dinner — Li Bai Crab Roe Noodles & more" },
+    ],
+  },
+];
+
+const DAY_ROUTES = [
+  {
+    id: "may7", label: "May 7", color: "#0369a1",
+    path: [
+      [26.209, 127.647], // Naha Airport
+      [26.249, 127.721], // Asoviva Works (Urasoe)
+      [26.308, 127.797], // AEON Mall Rycom
+      [26.444, 127.763], // Cape Maeda / Blue Cave ⭐
+      [26.591, 127.978], // Nago
+      [26.704, 127.881], // Bise-Fukugi Tree Road
+      [26.698, 128.151], // Ogimi Roadside Station ⛺
+    ],
+  },
+  {
+    id: "may8", label: "May 8", color: "#0891b2",
+    path: [
+      [26.698, 128.151], // Ogimi camp
+      [26.244, 127.713], // Bookcafe Okinawa Rail (Naha area)
+      [26.867, 128.261], // Cape Hedo ⭐
+      [26.616, 127.970], // Nago Pineapple Park
+      [26.474, 127.952], // Ginoza Roadside Station ⛺
+    ],
+  },
+  {
+    id: "may9", label: "May 9", color: "#15803d",
+    path: [
+      [26.474, 127.952], // Ginoza camp
+      [26.697, 128.271], // Sunrise Higashi
+      [26.386, 127.972], // Salt Factory (Uruma)
+      [26.331, 127.879], // Katsuren Castle
+      [26.308, 127.797], // AEON Mall Rycom
+      [26.153, 127.795], // Cape Chinen
+      [26.193, 127.669], // Ryujin Hot Springs ⛺
+    ],
+  },
+  {
+    id: "may10", label: "May 10", color: "#7c3aed",
+    path: [
+      [26.193, 127.669], // Hot springs camp
+      [26.308, 127.797], // AEON Mall Rycom
+      [26.171, 127.742], // Okinawa World
+      [26.219, 127.688], // Tsukumo / Naha ⛺
+    ],
+  },
+  {
+    id: "may11", label: "May 11", color: "#c2410c",
+    path: [
+      [26.219, 127.688], // Naha camp
+      [26.249, 127.721], // Asoviva Works (return van)
+      [26.209, 127.647], // Naha Airport ✈️
+    ],
+  },
+];
+
 const makeIcon = (emoji, color) =>
   L.divIcon({
     html: `<div style="background:${color};width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.35);">${emoji}</div>`,
@@ -151,11 +276,29 @@ const makeIcon = (emoji, color) =>
   });
 
 export default function Okinawa() {
+  const [activeTab, setActiveTab] = useState("may7");
   const [activeFilter, setActiveFilter] = useState(null);
+  const [activeDayRoutes, setActiveDayRoutes] = useState(null);
+
+  const day = DAYS.find(d => d.id === activeTab);
 
   const visibleCats = activeFilter
     ? BOOKMARKS.filter(c => c.id === activeFilter)
     : BOOKMARKS;
+
+  const visibleRoutes = activeDayRoutes
+    ? DAY_ROUTES.filter(r => r.id === activeDayRoutes)
+    : DAY_ROUTES;
+
+  const tabBtn = (id, label, isActive) => (
+    <button key={id} onClick={() => setActiveTab(id)} style={{
+      padding: "12px 14px", background: "none", border: "none",
+      borderBottom: isActive ? "3px solid #0891b2" : "3px solid transparent",
+      color: isActive ? "#0891b2" : "#6b7280",
+      fontWeight: isActive ? 700 : 400,
+      cursor: "pointer", fontSize: 12, fontFamily: "inherit", whiteSpace: "nowrap",
+    }}>{label}</button>
+  );
 
   return (
     <div style={{ fontFamily: "'Georgia', serif", background: "#fafaf8", minHeight: "100vh" }}>
@@ -166,21 +309,77 @@ export default function Okinawa() {
         color: "white", padding: "28px 24px 20px", textAlign: "center",
       }}>
         <div style={{ fontSize: 12, letterSpacing: 4, textTransform: "uppercase", opacity: 0.65, marginBottom: 6 }}>
-          Travel Bookmarks
+          Travel Itinerary
         </div>
         <h1 style={{ fontSize: 26, fontWeight: "bold", margin: "0 0 4px" }}>
-          Okinawa 🌺
+          Singapore → Okinawa 🌺
         </h1>
-        <div style={{ fontSize: 13, opacity: 0.75, marginBottom: 16 }}>May 7–12, 2026 · Campervan Adventure</div>
+        <div style={{ fontSize: 13, opacity: 0.75, marginBottom: 16 }}>May 7–11, 2026 · Campervan Adventure</div>
         <div style={{ display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap" }}>
-          {["✈️ Arrive ~08:00 May 7", "🚐 ASOVIVAN Type 4 Camper", "✈️ Depart 15:00 May 12"].map((t, i) => (
+          {["✈️ Depart SG 02:15 May 7", "🛬 Arrive Okinawa 08:35 May 7", "🚐 ASOVIVAN Type 4 Camper"].map((t, i) => (
             <span key={i} style={{ background: "rgba(255,255,255,0.15)", padding: "5px 13px", borderRadius: 20, fontSize: 12 }}>{t}</span>
           ))}
         </div>
       </div>
 
-      {/* Map & Bookmarks */}
-      <>
+      {/* Tabs */}
+      <div style={{ background: "white", borderBottom: "1px solid #e5e7eb", overflowX: "auto" }}>
+        <div style={{ display: "flex", minWidth: "max-content", padding: "0 12px" }}>
+          {DAYS.map(d =>
+            tabBtn(
+              d.id,
+              `${d.type === "arrive" ? "✈️ " : d.type === "depart" ? "🛫 " : ""}${d.label}`,
+              activeTab === d.id
+            )
+          )}
+          {tabBtn("map", "🗺️ Map & Bookmarks", activeTab === "map")}
+        </div>
+      </div>
+
+      {/* Day content */}
+      {activeTab !== "map" && day && (
+        <div style={{ maxWidth: 680, margin: "0 auto", padding: "24px 16px 48px" }}>
+          <div style={{
+            background: day.color, color: "white",
+            borderRadius: 14, padding: "16px 20px", marginBottom: 16,
+          }}>
+            <div style={{ fontSize: 11, opacity: 0.75, textTransform: "uppercase", letterSpacing: 2, marginBottom: 4 }}>
+              {day.label}
+            </div>
+            <div style={{ fontWeight: 700, fontSize: 17, marginBottom: 6 }}>{day.headline}</div>
+            <div style={{ fontSize: 12, opacity: 0.85 }}>🚐 {day.drive}</div>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+            {day.schedule.map((item, i) => (
+              <div key={i} style={{ display: "flex", gap: 0, position: "relative" }}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 40, flexShrink: 0 }}>
+                  <div style={{
+                    width: 32, height: 32, borderRadius: "50%",
+                    background: "white", border: `2px solid ${day.color}`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 14, zIndex: 1, flexShrink: 0,
+                  }}>{item.icon}</div>
+                  {i < day.schedule.length - 1 && (
+                    <div style={{ width: 2, flex: 1, minHeight: 12, background: `${day.color}30` }} />
+                  )}
+                </div>
+                <div style={{
+                  flex: 1, background: "white", borderRadius: 10,
+                  padding: "8px 12px", marginBottom: 6, marginLeft: 8,
+                  border: "1px solid #e5e7eb",
+                }}>
+                  <div style={{ fontSize: 10, color: day.color, fontWeight: 700, marginBottom: 2 }}>{item.time}</div>
+                  <div style={{ fontSize: 13, color: "#111827" }}>{item.activity}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Map & Bookmarks tab */}
+      {activeTab === "map" && (
+        <>
           <div style={{ maxWidth: 680, margin: "0 auto", padding: "20px 16px 0" }}>
             <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 10, color: "#111827", textAlign: "center" }}>
               🗺️ Okinawa Bookmarks
@@ -206,6 +405,44 @@ export default function Okinawa() {
               ))}
             </div>
 
+            {/* Route day filter */}
+            <div style={{ marginBottom: 10 }}>
+              <div style={{ fontSize: 11, color: "#6b7280", textAlign: "center", marginBottom: 6, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" }}>
+                Route Filter
+              </div>
+              <div style={{ display: "flex", gap: 5, flexWrap: "wrap", justifyContent: "center" }}>
+                <button onClick={() => setActiveDayRoutes(null)} style={{
+                  padding: "4px 10px", borderRadius: 20, border: "none",
+                  background: !activeDayRoutes ? "#111827" : "#e5e7eb",
+                  color: !activeDayRoutes ? "white" : "#374151",
+                  fontSize: 11, cursor: "pointer", fontFamily: "inherit", fontWeight: !activeDayRoutes ? 700 : 400,
+                }}>All Days</button>
+                {DAY_ROUTES.map(r => (
+                  <button key={r.id} onClick={() => setActiveDayRoutes(activeDayRoutes === r.id ? null : r.id)} style={{
+                    padding: "4px 10px", borderRadius: 20,
+                    background: activeDayRoutes === r.id ? r.color : "white",
+                    color: activeDayRoutes === r.id ? "white" : r.color,
+                    fontSize: 11, cursor: "pointer", fontFamily: "inherit",
+                    fontWeight: activeDayRoutes === r.id ? 700 : 400,
+                    border: `1.5px solid ${r.color}`,
+                  }}>{r.label}</button>
+                ))}
+              </div>
+            </div>
+
+            {/* Route legend */}
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center", marginBottom: 12 }}>
+              {DAY_ROUTES.map(r => (
+                <div key={r.id} style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "#374151" }}>
+                  <div style={{
+                    width: 24, height: 3, background: r.color, borderRadius: 2,
+                    opacity: !activeDayRoutes || activeDayRoutes === r.id ? 1 : 0.25,
+                  }} />
+                  <span style={{ opacity: !activeDayRoutes || activeDayRoutes === r.id ? 1 : 0.4 }}>{r.label}</span>
+                </div>
+              ))}
+            </div>
+
             {/* Leaflet Map */}
             <div style={{ borderRadius: 16, overflow: "hidden", border: "1.5px solid #d1d5db", height: 700 }}>
                 <MapContainer
@@ -218,6 +455,18 @@ export default function Okinawa() {
                     attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
+                  {visibleRoutes.map(r => (<>
+                    <Polyline
+                      key={`${r.id}-outline`}
+                      positions={r.path}
+                      pathOptions={{ color: "white", weight: 8, opacity: 0.9 }}
+                    />
+                    <Polyline
+                      key={`${r.id}-line`}
+                      positions={r.path}
+                      pathOptions={{ color: r.color, weight: 5, opacity: 1 }}
+                    />
+                  </>))}
                   {visibleCats.map(cat =>
                     cat.places.map((place, i) => (
                       <Marker
@@ -303,7 +552,8 @@ export default function Okinawa() {
               ))}
             </div>
           </div>
-      </>
+        </>
+      )}
     </div>
   );
 }

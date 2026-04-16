@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:beijing.mfa.gov.sg)",
+      "WebFetch(domain:shanghai.mfa.gov.sg)",
+      "WebFetch(domain:chengdu.mfa.gov.sg)",
+      "WebFetch(domain:tokyo.mfa.gov.sg)",
+      "WebFetch(domain:www.mfa.gov.sg)"
     ]
   }
 }

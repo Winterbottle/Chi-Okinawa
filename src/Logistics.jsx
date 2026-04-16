@@ -108,6 +108,67 @@ const CAR = {
 
 const PASSENGERS = ["Rachel Jee Fang Ling", "Jeslyn Ho Ka Yan", "Tan Wei Cheng"];
 
+const EMBASSIES = [
+  {
+    country: "Japan 🇯🇵",
+    note: "For Okinawa — contact Osaka Honorary CG first; Tokyo Embassy for full consular services",
+    color: "#dc2626",
+    light: "#fff5f5",
+    border: "#fca5a5",
+    missions: [
+      {
+        name: "Singapore Embassy Tokyo",
+        type: "Main Embassy",
+        address: "5-12-3 Roppongi, Minato-ku, Tokyo 106-0032",
+        phone: "+81-3-3586-9111",
+        emergency: "+81-90-5949-6366 or +81-90-5258-3252 (24 hr)",
+        email: "singemb_tyo@mfa.sg",
+        hours: "Mon–Fri 09:00–12:30, 13:30–17:30",
+        web: "https://tokyo.mfa.gov.sg/",
+      },
+      {
+        name: "Singapore Honorary Consulate-General Osaka",
+        type: "Covers Western Japan incl. Okinawa",
+        address: "3-77 Oimatsu-cho, Sakai-ku, Sakai City, Osaka 590-8577",
+        phone: "+81-72-223-6911",
+        emergency: "—",
+        email: "HCG-Osaka@sic.shimano.co.jp",
+        hours: "Mon–Fri 09:00–11:30",
+        web: "https://osaka.mfa.gov.sg/",
+      },
+    ],
+  },
+  {
+    country: "China 🇨🇳",
+    note: "Shanghai CG for Shanghai stay; Chengdu CG covers Chongqing (no CG in Chongqing)",
+    color: "#b91c1c",
+    light: "#fef2f2",
+    border: "#fca5a5",
+    missions: [
+      {
+        name: "Singapore Consulate-General Shanghai",
+        type: "Shanghai & surrounds",
+        address: "89 Wanshan Road, Shanghai 200336",
+        phone: "+86-21-6278-5566",
+        emergency: "+86-138-0194-9439 (after hours)",
+        email: "singcg_sha@mfa.sg",
+        hours: "Mon–Fri 08:30–12:00, 13:00–17:00",
+        web: "https://shanghai.mfa.gov.sg/",
+      },
+      {
+        name: "Singapore Consulate-General Chengdu",
+        type: "Covers Chongqing",
+        address: "Level 30-01 Yanlord Landmark, No.1 Sec 2 Renmin South Rd, Chengdu 610016",
+        phone: "+86-28-8652-7222",
+        emergency: "+86-139-0807-3562 (after hours)",
+        email: "singcg_cgu@mfa.sg",
+        hours: "Mon–Fri 08:30–12:00, 13:00–17:00",
+        web: "https://chengdu.mfa.gov.sg/",
+      },
+    ],
+  },
+];
+
 export default function Logistics() {
   return (
     <div style={{ fontFamily: "'Georgia', serif", background: "#fafaf8", minHeight: "100vh" }}>
@@ -283,6 +344,58 @@ export default function Logistics() {
                     padding: "4px 10px", borderRadius: 6, textDecoration: "none", fontWeight: 600,
                   }}>🔗 Trip.com Booking</a>
                 )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ── Singapore Embassies ── */}
+        <div style={{ fontWeight: 700, fontSize: 16, marginTop: 32, marginBottom: 14, color: "#111827" }}>
+          🏛️ Singapore Embassies & Consulates
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {EMBASSIES.map((grp, gi) => (
+            <div key={gi} style={{
+              background: grp.light, border: `1.5px solid ${grp.border}`,
+              borderRadius: 14, overflow: "hidden",
+            }}>
+              <div style={{
+                background: grp.color, color: "white",
+                padding: "10px 16px",
+              }}>
+                <div style={{ fontWeight: 700, fontSize: 14 }}>{grp.country}</div>
+                <div style={{ fontSize: 11, opacity: 0.85, marginTop: 2 }}>{grp.note}</div>
+              </div>
+              <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 12 }}>
+                {grp.missions.map((m, mi) => (
+                  <div key={mi} style={{
+                    background: "white", borderRadius: 10,
+                    border: `1px solid ${grp.border}`, padding: "12px 14px",
+                  }}>
+                    <div style={{ fontWeight: 700, fontSize: 13, color: "#111827", marginBottom: 2 }}>{m.name}</div>
+                    <div style={{ fontSize: 11, color: grp.color, fontWeight: 600, marginBottom: 8 }}>{m.type}</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                      {[
+                        `📍 ${m.address}`,
+                        `📞 ${m.phone}`,
+                        m.emergency !== "—" && `🚨 Emergency: ${m.emergency}`,
+                        `📧 ${m.email}`,
+                        `🕐 ${m.hours}`,
+                      ].filter(Boolean).map((item, ii) => (
+                        <span key={ii} style={{
+                          fontSize: 11, background: grp.light,
+                          border: `1px solid ${grp.border}`,
+                          padding: "3px 8px", borderRadius: 6, color: "#374151",
+                        }}>{item}</span>
+                      ))}
+                      <a href={m.web} target="_blank" rel="noopener noreferrer" style={{
+                        fontSize: 11, color: grp.color, background: "white",
+                        border: `1px solid ${grp.border}`,
+                        padding: "3px 8px", borderRadius: 6, textDecoration: "none", fontWeight: 600,
+                      }}>🔗 Website</a>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
