@@ -1,7 +1,4 @@
 import { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 
 const gmaps = (name) =>
   `https://www.google.com/maps/search/${encodeURIComponent(name + " Okinawa Japan")}`;
@@ -212,83 +209,15 @@ const DAYS = [
   },
 ];
 
-const DAY_ROUTES = [
-  {
-    id: "may7", label: "May 7", color: "#0369a1",
-    path: [
-      [26.209, 127.647], // Naha Airport
-      [26.249, 127.721], // Asoviva Works (Urasoe)
-      [26.308, 127.797], // AEON Mall Rycom
-      [26.444, 127.763], // Cape Maeda / Blue Cave ⭐
-      [26.591, 127.978], // Nago
-      [26.704, 127.881], // Bise-Fukugi Tree Road
-      [26.698, 128.151], // Ogimi Roadside Station ⛺
-    ],
-  },
-  {
-    id: "may8", label: "May 8", color: "#0891b2",
-    path: [
-      [26.698, 128.151], // Ogimi camp
-      [26.244, 127.713], // Bookcafe Okinawa Rail (Naha area)
-      [26.867, 128.261], // Cape Hedo ⭐
-      [26.616, 127.970], // Nago Pineapple Park
-      [26.474, 127.952], // Ginoza Roadside Station ⛺
-    ],
-  },
-  {
-    id: "may9", label: "May 9", color: "#15803d",
-    path: [
-      [26.474, 127.952], // Ginoza camp
-      [26.697, 128.271], // Sunrise Higashi
-      [26.386, 127.972], // Salt Factory (Uruma)
-      [26.331, 127.879], // Katsuren Castle
-      [26.308, 127.797], // AEON Mall Rycom
-      [26.153, 127.795], // Cape Chinen
-      [26.193, 127.669], // Ryujin Hot Springs ⛺
-    ],
-  },
-  {
-    id: "may10", label: "May 10", color: "#7c3aed",
-    path: [
-      [26.193, 127.669], // Hot springs camp
-      [26.308, 127.797], // AEON Mall Rycom
-      [26.171, 127.742], // Okinawa World
-      [26.219, 127.688], // Tsukumo / Naha ⛺
-    ],
-  },
-  {
-    id: "may11", label: "May 11", color: "#c2410c",
-    path: [
-      [26.219, 127.688], // Naha camp
-      [26.249, 127.721], // Asoviva Works (return van)
-      [26.209, 127.647], // Naha Airport ✈️
-    ],
-  },
-];
-
-const makeIcon = (emoji, color) =>
-  L.divIcon({
-    html: `<div style="background:${color};width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.35);">${emoji}</div>`,
-    className: "",
-    iconSize: [34, 34],
-    iconAnchor: [17, 17],
-    popupAnchor: [0, -18],
-  });
-
 export default function Okinawa() {
   const [activeTab, setActiveTab] = useState("may7");
   const [activeFilter, setActiveFilter] = useState(null);
-  const [activeDayRoutes, setActiveDayRoutes] = useState(null);
 
   const day = DAYS.find(d => d.id === activeTab);
 
   const visibleCats = activeFilter
     ? BOOKMARKS.filter(c => c.id === activeFilter)
     : BOOKMARKS;
-
-  const visibleRoutes = activeDayRoutes
-    ? DAY_ROUTES.filter(r => r.id === activeDayRoutes)
-    : DAY_ROUTES;
 
   const tabBtn = (id, label, isActive) => (
     <button key={id} onClick={() => setActiveTab(id)} style={{
@@ -382,7 +311,21 @@ export default function Okinawa() {
         <>
           <div style={{ maxWidth: 680, margin: "0 auto", padding: "20px 16px 0" }}>
             <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 10, color: "#111827", textAlign: "center" }}>
-              🗺️ Okinawa Bookmarks
+              🗺️ Okinawa Map & Bookmarks
+            </div>
+
+            {/* Google Maps iframe */}
+            <div style={{ borderRadius: 16, overflow: "hidden", border: "1.5px solid #d1d5db", marginBottom: 14 }}>
+              <iframe
+                title="Okinawa Google Map"
+                src="https://www.google.com/maps?q=Okinawa+Prefecture+Japan&t=m&z=9&output=embed"
+                width="100%"
+                height="480"
+                style={{ border: 0, display: "block" }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
 
             {/* Category filter pills */}
@@ -403,100 +346,6 @@ export default function Okinawa() {
                   border: `1px solid ${cat.border}`,
                 }}>{cat.emoji} {cat.title}</button>
               ))}
-            </div>
-
-            {/* Route day filter */}
-            <div style={{ marginBottom: 10 }}>
-              <div style={{ fontSize: 11, color: "#6b7280", textAlign: "center", marginBottom: 6, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" }}>
-                Route Filter
-              </div>
-              <div style={{ display: "flex", gap: 5, flexWrap: "wrap", justifyContent: "center" }}>
-                <button onClick={() => setActiveDayRoutes(null)} style={{
-                  padding: "4px 10px", borderRadius: 20, border: "none",
-                  background: !activeDayRoutes ? "#111827" : "#e5e7eb",
-                  color: !activeDayRoutes ? "white" : "#374151",
-                  fontSize: 11, cursor: "pointer", fontFamily: "inherit", fontWeight: !activeDayRoutes ? 700 : 400,
-                }}>All Days</button>
-                {DAY_ROUTES.map(r => (
-                  <button key={r.id} onClick={() => setActiveDayRoutes(activeDayRoutes === r.id ? null : r.id)} style={{
-                    padding: "4px 10px", borderRadius: 20,
-                    background: activeDayRoutes === r.id ? r.color : "white",
-                    color: activeDayRoutes === r.id ? "white" : r.color,
-                    fontSize: 11, cursor: "pointer", fontFamily: "inherit",
-                    fontWeight: activeDayRoutes === r.id ? 700 : 400,
-                    border: `1.5px solid ${r.color}`,
-                  }}>{r.label}</button>
-                ))}
-              </div>
-            </div>
-
-            {/* Route legend */}
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center", marginBottom: 12 }}>
-              {DAY_ROUTES.map(r => (
-                <div key={r.id} style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "#374151" }}>
-                  <div style={{
-                    width: 24, height: 3, background: r.color, borderRadius: 2,
-                    opacity: !activeDayRoutes || activeDayRoutes === r.id ? 1 : 0.25,
-                  }} />
-                  <span style={{ opacity: !activeDayRoutes || activeDayRoutes === r.id ? 1 : 0.4 }}>{r.label}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Leaflet Map */}
-            <div style={{ borderRadius: 16, overflow: "hidden", border: "1.5px solid #d1d5db", height: 700 }}>
-                <MapContainer
-                  center={[26.49, 127.97]}
-                  zoom={9}
-                  style={{ height: "100%", width: "100%" }}
-                  scrollWheelZoom={true}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  {visibleRoutes.map(r => (<>
-                    <Polyline
-                      key={`${r.id}-outline`}
-                      positions={r.path}
-                      pathOptions={{ color: "white", weight: 8, opacity: 0.9 }}
-                    />
-                    <Polyline
-                      key={`${r.id}-line`}
-                      positions={r.path}
-                      pathOptions={{ color: r.color, weight: 5, opacity: 1 }}
-                    />
-                  </>))}
-                  {visibleCats.map(cat =>
-                    cat.places.map((place, i) => (
-                      <Marker
-                        key={`${cat.id}-${i}`}
-                        position={place.coord}
-                        icon={makeIcon(cat.emoji, cat.color)}
-                      >
-                        <Popup>
-                          <div style={{ minWidth: 160 }}>
-                            <div style={{
-                              background: cat.color, color: "white",
-                              margin: "-7px -7px 8px", padding: "6px 10px",
-                              borderRadius: "4px 4px 0 0", fontSize: 12, fontWeight: 700,
-                            }}>{cat.emoji} {cat.title}</div>
-                            <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 4 }}>{place.name}</div>
-                            {place.hours && (
-                              <div style={{ fontSize: 11, color: "#374151", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
-                                <span>🕐</span><span>{place.hours}</span>
-                              </div>
-                            )}
-                            <a href={gmaps(place.name)} target="_blank" rel="noopener noreferrer"
-                              style={{ fontSize: 11, color: "#16a34a", textDecoration: "none" }}>
-                              📍 Open in Google Maps
-                            </a>
-                          </div>
-                        </Popup>
-                      </Marker>
-                    ))
-                  )}
-                </MapContainer>
             </div>
           </div>
 
