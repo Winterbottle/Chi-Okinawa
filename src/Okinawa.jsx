@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 const gmaps = (name) =>
   `https://www.google.com/maps/search/${encodeURIComponent(name + " Okinawa Japan")}`;
@@ -209,6 +212,15 @@ const DAYS = [
   },
 ];
 
+const makeIcon = (emoji, color) =>
+  L.divIcon({
+    html: `<div style="background:${color};width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);">${emoji}</div>`,
+    className: "",
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+    popupAnchor: [0, -20],
+  });
+
 export default function Okinawa() {
   const [activeTab, setActiveTab] = useState("may7");
   const [activeFilter, setActiveFilter] = useState(null);
@@ -276,7 +288,21 @@ export default function Okinawa() {
               {day.label}
             </div>
             <div style={{ fontWeight: 700, fontSize: 17, marginBottom: 6 }}>{day.headline}</div>
-            <div style={{ fontSize: 12, opacity: 0.85 }}>🚐 {day.drive}</div>
+            <div style={{ fontSize: 12, opacity: 0.85, marginBottom: 12 }}>🚐 {day.drive}</div>
+            <a
+              href="https://maps.app.goo.gl/J4n4tSo3A87pqLMh6"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                background: "rgba(255,255,255,0.2)", border: "1.5px solid rgba(255,255,255,0.5)",
+                color: "white", textDecoration: "none",
+                padding: "7px 14px", borderRadius: 20,
+                fontSize: 12, fontWeight: 600,
+              }}
+            >
+              📍 Open Trip Map in Google Maps
+            </a>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
             {day.schedule.map((item, i) => (
@@ -314,18 +340,37 @@ export default function Okinawa() {
               🗺️ Okinawa Map & Bookmarks
             </div>
 
-            {/* Google Maps iframe */}
-            <div style={{ borderRadius: 16, overflow: "hidden", border: "1.5px solid #d1d5db", marginBottom: 14 }}>
-              <iframe
-                title="Okinawa Google Map"
-                src="https://www.google.com/maps?q=Okinawa+Prefecture+Japan&t=m&z=9&output=embed"
-                width="100%"
-                height="480"
-                style={{ border: 0, display: "block" }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
+            {/* Map */}
+            <div style={{ borderRadius: 16, overflow: "hidden", border: "1.5px solid #d1d5db", marginBottom: 14, height: 480 }}>
+              <MapContainer center={[26.49, 127.97]} zoom={9} style={{ height: "100%", width: "100%" }} scrollWheelZoom>
+                <TileLayer
+                  attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+                  url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                />
+                {visibleCats.map(cat =>
+                  cat.places.map((place, i) => (
+                    <Marker key={`${cat.id}-${i}`} position={place.coord} icon={makeIcon(cat.emoji, cat.color)}>
+                      <Popup>
+                        <div style={{ minWidth: 170 }}>
+                          <div style={{
+                            background: cat.color, color: "white",
+                            margin: "-7px -7px 8px", padding: "7px 11px",
+                            borderRadius: "4px 4px 0 0", fontSize: 12, fontWeight: 700,
+                          }}>{cat.emoji} {cat.title}</div>
+                          <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 4 }}>{place.name}</div>
+                          {place.hours && (
+                            <div style={{ fontSize: 11, color: "#374151", marginBottom: 7 }}>🕐 {place.hours}</div>
+                          )}
+                          <a href={gmaps(place.name)} target="_blank" rel="noopener noreferrer"
+                            style={{ fontSize: 12, color: "#16a34a", textDecoration: "none", fontWeight: 600 }}>
+                            📍 Open in Google Maps
+                          </a>
+                        </div>
+                      </Popup>
+                    </Marker>
+                  ))
+                )}
+              </MapContainer>
             </div>
 
             {/* Category filter pills */}
